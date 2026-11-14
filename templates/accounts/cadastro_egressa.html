@@ -1,12 +1,248 @@
+<!-- Caminho: templates/contas/cadastro_egressa.html -->
+
 {% extends 'base.html' %}
 
-{% block title %}Cadastro de egressa{% endblock %}
+{% block title %}Cadastro de egressa | Recomeçar{% endblock %}
 
 {% block content %}
-<h1>Cadastro de egressa</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Cadastrar</button>
-</form>
+
+<main class="min-h-screen bg-gradient-to-br from-violet-50 via-purple-50 to-slate-50 px-4 py-10 sm:px-6 lg:px-8">
+
+    <div class="mx-auto flex w-full max-w-3xl flex-col justify-center">
+
+        <!-- Cabeçalho da página -->
+        <header class="mb-8 text-center">
+
+            <!-- Identidade visual Recomeçar -->
+            <div class="mb-5 inline-flex items-center justify-center gap-3">
+
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-8 w-8"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 21c0-6 0-10 5-14"/>
+                        <path d="M12 17c-5 0-8-3-8-8 5 0 8 3 8 8Z"/>
+                        <path d="M12 12c0-5 3-8 8-8 0 5-3 8-8 8Z"/>
+                    </svg>
+                </div>
+
+                <div class="text-left">
+                    <span class="block text-3xl font-bold tracking-tight text-violet-900">
+                        Recomeçar
+                    </span>
+                    <span class="text-sm font-medium text-slate-600">
+                        Talento que transforma
+                    </span>
+                </div>
+
+            </div>
+
+            <h1 class="text-2xl font-bold tracking-tight text-slate-800 sm:text-3xl">
+                Cadastro de egressa
+            </h1>
+
+            <p class="mx-auto mt-3 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
+                Um novo capítulo começa com uma oportunidade.
+                Preencha seus dados para criar seu perfil.
+            </p>
+
+        </header>
+
+        <!-- Cartão do formulário -->
+        <section class="overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-xl shadow-violet-100/60">
+
+            <!-- Faixa decorativa -->
+            <div class="h-2 bg-gradient-to-r from-violet-400 via-purple-500 to-fuchsia-400"></div>
+
+            <div class="p-5 sm:p-8 md:p-10">
+
+                <div class="mb-8">
+
+                    <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-violet-700">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-6 w-6"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+
+                    </div>
+
+                    <h2 class="text-xl font-bold text-slate-800">
+                        Seus dados pessoais
+                    </h2>
+
+                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
+                        Informe seus dados nos campos abaixo para continuar.
+                        Os campos obrigatórios devem ser preenchidos.
+                    </p>
+
+                </div>
+
+                <!-- Formulário Django: lógica original preservada -->
+                <form method="post"
+                      class="space-y-5
+                      [&_p]:mb-5
+                      [&_label]:mb-2
+                      [&_label]:block
+                      [&_label]:text-sm
+                      [&_label]:font-semibold
+                      [&_label]:text-slate-700
+                      [&_input]:block
+                      [&_input]:min-h-12
+                      [&_input]:w-full
+                      [&_input]:rounded-xl
+                      [&_input]:border
+                      [&_input]:border-slate-300
+                      [&_input]:bg-slate-50
+                      [&_input]:px-4
+                      [&_input]:py-3
+                      [&_input]:text-base
+                      [&_input]:text-slate-800
+                      [&_input]:outline-none
+                      [&_input]:transition
+                      [&_input]:duration-200
+                      [&_input]:placeholder:text-slate-400
+                      [&_input]:focus:border-violet-500
+                      [&_input]:focus:bg-white
+                      [&_input]:focus:ring-4
+                      [&_input]:focus:ring-violet-100
+                      [&_select]:block
+                      [&_select]:min-h-12
+                      [&_select]:w-full
+                      [&_select]:rounded-xl
+                      [&_select]:border
+                      [&_select]:border-slate-300
+                      [&_select]:bg-slate-50
+                      [&_select]:px-4
+                      [&_select]:py-3
+                      [&_select]:text-base
+                      [&_select]:text-slate-800
+                      [&_select]:outline-none
+                      [&_select]:focus:border-violet-500
+                      [&_select]:focus:ring-4
+                      [&_select]:focus:ring-violet-100
+                      [&_textarea]:block
+                      [&_textarea]:min-h-28
+                      [&_textarea]:w-full
+                      [&_textarea]:resize-y
+                      [&_textarea]:rounded-xl
+                      [&_textarea]:border
+                      [&_textarea]:border-slate-300
+                      [&_textarea]:bg-slate-50
+                      [&_textarea]:px-4
+                      [&_textarea]:py-3
+                      [&_textarea]:text-base
+                      [&_textarea]:text-slate-800
+                      [&_textarea]:outline-none
+                      [&_textarea]:focus:border-violet-500
+                      [&_textarea]:focus:ring-4
+                      [&_textarea]:focus:ring-violet-100
+                      [&_input[type=checkbox]]:min-h-4
+                      [&_input[type=checkbox]]:h-4
+                      [&_input[type=checkbox]]:w-4
+                      [&_input[type=checkbox]]:cursor-pointer
+                      [&_input[type=checkbox]]:rounded
+                      [&_input[type=checkbox]]:border-violet-400
+                      [&_input[type=checkbox]]:accent-violet-700
+                      [&_input[type=radio]]:min-h-4
+                      [&_input[type=radio]]:h-4
+                      [&_input[type=radio]]:w-4
+                      [&_input[type=radio]]:cursor-pointer
+                      [&_input[type=radio]]:accent-violet-700
+                      [&_ul.errorlist]:mb-3
+                      [&_ul.errorlist]:rounded-xl
+                      [&_ul.errorlist]:bg-red-50
+                      [&_ul.errorlist]:px-4
+                      [&_ul.errorlist]:py-3
+                      [&_ul.errorlist]:text-sm
+                      [&_ul.errorlist]:font-medium
+                      [&_ul.errorlist]:text-red-700
+                      [&_.helptext]:mt-2
+                      [&_.helptext]:block
+                      [&_.helptext]:text-sm
+                      [&_.helptext]:leading-relaxed
+                      [&_.helptext]:text-slate-500">
+
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <!-- Botão de envio -->
+                    <div class="mt-8 border-t border-slate-100 pt-6">
+
+                        <button type="submit"
+                                class="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-violet-700 px-6 py-4 text-base font-bold text-white shadow-lg shadow-violet-200 transition duration-200 hover:-translate-y-0.5 hover:bg-violet-800 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-violet-200 active:translate-y-0 sm:text-lg">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M5 12h14"/>
+                                <path d="m12 5 7 7-7 7"/>
+                            </svg>
+
+                            Cadastrar
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <!-- Mensagem de acolhimento -->
+        <footer class="mt-8 text-center">
+
+            <div class="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5 text-violet-500"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M12 21s-8-4.5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6.5-8 11-8 11Z"/>
+                </svg>
+
+                <span>
+                    Toda mulher merece uma nova oportunidade.
+                </span>
+
+            </div>
+
+            <p class="mt-3 text-xs text-slate-400">
+                Recomeçar — Talento que transforma.
+            </p>
+
+        </footer>
+
+    </div>
+
+</main>
+
 {% endblock %}

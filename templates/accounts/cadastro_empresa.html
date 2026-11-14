@@ -1,12 +1,258 @@
+<!-- Caminho: templates/contas/cadastro_empresa.html -->
+
 {% extends 'base.html' %}
 
-{% block title %}Cadastro de empresa{% endblock %}
+{% block title %}Cadastro de empresa | Recomeçar{% endblock %}
 
 {% block content %}
-<h1>Cadastro de empresa</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Cadastrar</button>
-</form>
+
+<main class="min-h-screen bg-gradient-to-br from-slate-100 via-slate-50 to-blue-50 px-4 py-10 sm:px-6 lg:px-8">
+
+    <div class="mx-auto flex w-full max-w-3xl flex-col justify-center">
+
+        <!-- Cabeçalho e identidade visual -->
+        <header class="mb-8 text-center">
+
+            <div class="mb-5 inline-flex items-center justify-center gap-3">
+
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-100 text-blue-900 shadow-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-8 w-8"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+                        <rect x="3" y="7" width="18" height="14" rx="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        <path d="M7 11h.01M7 15h.01M12 11h.01M12 15h.01M17 11h.01M17 15h.01"/>
+                    </svg>
+                </div>
+
+                <div class="text-left">
+                    <span class="block text-3xl font-bold tracking-tight text-blue-950">
+                        Recomeçar
+                    </span>
+                    <span class="text-sm font-medium text-slate-600">
+                        Conectando empresas e talentos
+                    </span>
+                </div>
+
+            </div>
+
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                Cadastro de empresa
+            </h1>
+
+            <p class="mx-auto mt-3 max-w-lg text-base leading-relaxed text-slate-600 sm:text-lg">
+                Faça parte de uma rede que transforma oportunidades em histórias de sucesso.
+                Cadastre sua empresa e encontre novos talentos.
+            </p>
+
+        </header>
+
+        <!-- Cartão principal -->
+        <section class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-xl shadow-slate-200/70">
+
+            <!-- Faixa superior -->
+            <div class="h-2 bg-gradient-to-r from-blue-950 via-blue-800 to-sky-500"></div>
+
+            <div class="p-5 sm:p-8 md:p-10">
+
+                <!-- Introdução ao formulário -->
+                <div class="mb-8">
+
+                    <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-900">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-6 w-6"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <rect x="3" y="7" width="18" height="14" rx="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            <path d="M9 11h6M9 15h6"/>
+                        </svg>
+
+                    </div>
+
+                    <h2 class="text-xl font-bold text-slate-900">
+                        Dados da sua empresa
+                    </h2>
+
+                    <p class="mt-2 text-sm leading-relaxed text-slate-500">
+                        Preencha as informações da sua organização para criar seu cadastro na plataforma.
+                        Os campos obrigatórios devem ser preenchidos.
+                    </p>
+
+                </div>
+
+                <!-- Formulário Django: lógica original preservada -->
+                <form method="post"
+                      class="space-y-5
+
+                      [&_p]:mb-5
+
+                      [&_label]:mb-2
+                      [&_label]:block
+                      [&_label]:text-sm
+                      [&_label]:font-semibold
+                      [&_label]:text-slate-700
+
+                      [&_input:not([type=checkbox]):not([type=radio])]:block
+                      [&_input:not([type=checkbox]):not([type=radio])]:min-h-12
+                      [&_input:not([type=checkbox]):not([type=radio])]:w-full
+                      [&_input:not([type=checkbox]):not([type=radio])]:rounded-xl
+                      [&_input:not([type=checkbox]):not([type=radio])]:border
+                      [&_input:not([type=checkbox]):not([type=radio])]:border-slate-300
+                      [&_input:not([type=checkbox]):not([type=radio])]:bg-slate-50
+                      [&_input:not([type=checkbox]):not([type=radio])]:px-4
+                      [&_input:not([type=checkbox]):not([type=radio])]:py-3
+                      [&_input:not([type=checkbox]):not([type=radio])]:text-base
+                      [&_input:not([type=checkbox]):not([type=radio])]:text-slate-800
+                      [&_input:not([type=checkbox]):not([type=radio])]:outline-none
+                      [&_input:not([type=checkbox]):not([type=radio])]:transition
+                      [&_input:not([type=checkbox]):not([type=radio])]:duration-200
+                      [&_input:not([type=checkbox]):not([type=radio])]:placeholder:text-slate-400
+                      [&_input:not([type=checkbox]):not([type=radio])]:focus:border-blue-700
+                      [&_input:not([type=checkbox]):not([type=radio])]:focus:bg-white
+                      [&_input:not([type=checkbox]):not([type=radio])]:focus:ring-4
+                      [&_input:not([type=checkbox]):not([type=radio])]:focus:ring-blue-100
+
+                      [&_select]:block
+                      [&_select]:min-h-12
+                      [&_select]:w-full
+                      [&_select]:rounded-xl
+                      [&_select]:border
+                      [&_select]:border-slate-300
+                      [&_select]:bg-slate-50
+                      [&_select]:px-4
+                      [&_select]:py-3
+                      [&_select]:text-base
+                      [&_select]:text-slate-800
+                      [&_select]:outline-none
+                      [&_select]:focus:border-blue-700
+                      [&_select]:focus:ring-4
+                      [&_select]:focus:ring-blue-100
+
+                      [&_textarea]:block
+                      [&_textarea]:min-h-28
+                      [&_textarea]:w-full
+                      [&_textarea]:resize-y
+                      [&_textarea]:rounded-xl
+                      [&_textarea]:border
+                      [&_textarea]:border-slate-300
+                      [&_textarea]:bg-slate-50
+                      [&_textarea]:px-4
+                      [&_textarea]:py-3
+                      [&_textarea]:text-base
+                      [&_textarea]:text-slate-800
+                      [&_textarea]:outline-none
+                      [&_textarea]:focus:border-blue-700
+                      [&_textarea]:focus:ring-4
+                      [&_textarea]:focus:ring-blue-100
+
+                      [&_input[type=checkbox]]:h-5
+                      [&_input[type=checkbox]]:w-5
+                      [&_input[type=checkbox]]:cursor-pointer
+                      [&_input[type=checkbox]]:rounded
+                      [&_input[type=checkbox]]:accent-blue-900
+
+                      [&_input[type=radio]]:h-5
+                      [&_input[type=radio]]:w-5
+                      [&_input[type=radio]]:cursor-pointer
+                      [&_input[type=radio]]:accent-blue-900
+
+                      [&_ul.errorlist]:mb-3
+                      [&_ul.errorlist]:rounded-xl
+                      [&_ul.errorlist]:bg-red-50
+                      [&_ul.errorlist]:px-4
+                      [&_ul.errorlist]:py-3
+                      [&_ul.errorlist]:text-sm
+                      [&_ul.errorlist]:font-medium
+                      [&_ul.errorlist]:text-red-700
+
+                      [&_.helptext]:mt-2
+                      [&_.helptext]:block
+                      [&_.helptext]:text-sm
+                      [&_.helptext]:leading-relaxed
+                      [&_.helptext]:text-slate-500">
+
+                    {% csrf_token %}
+
+                    {{ form.as_p }}
+
+                    <!-- Botão de cadastro -->
+                    <div class="mt-8 border-t border-slate-100 pt-6">
+
+                        <button type="submit"
+                                class="flex min-h-14 w-full items-center justify-center gap-3 rounded-xl bg-blue-950 px-6 py-4 text-base font-bold text-white shadow-lg shadow-blue-950/15 transition duration-200 hover:-translate-y-0.5 hover:bg-blue-900 hover:shadow-xl focus:outline-none focus:ring-4 focus:ring-blue-200 active:translate-y-0 sm:text-lg">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M12 5v14"/>
+                                <path d="M5 12h14"/>
+                            </svg>
+
+                            Cadastrar empresa
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+        <!-- Rodapé acolhedor -->
+        <footer class="mt-8 text-center">
+
+            <div class="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-600">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5 text-blue-800"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+
+                <span>
+                    Sua empresa também pode transformar vidas.
+                </span>
+
+            </div>
+
+            <p class="mt-3 text-xs text-slate-400">
+                Recomeçar — Conectando empresas e talentos.
+            </p>
+
+        </footer>
+
+    </div>
+
+</main>
+
 {% endblock %}

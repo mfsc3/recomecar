@@ -1,20 +1,605 @@
+<!-- Caminho: templates/contas/painel.html -->
+
 {% extends 'base.html' %}
 
-{% block title %}Painel{% endblock %}
+{% block title %}Painel | Recomeçar{% endblock %}
 
 {% block content %}
-<h1 class="mb-4 text-2xl font-bold">Painel</h1>
-<p class="mb-6">Olá, {{ user.first_name|default:user.email }}. Seu perfil: {{ user.role }}.</p>
-{% if user.role == 'EGRESSA' %}
-    <a class="rounded bg-slate-800 px-4 py-2 text-white" href="{% url 'vagas:lista' %}">Ver vagas</a>
-{% elif user.role == 'EMPRESA' %}
-    {% if user.empresa_profile.is_aprovada %}
-        <p class="mb-4 text-green-700">Empresa aprovada</p>
-    {% else %}
-        <p class="mb-4 text-yellow-700">Aguardando aprovação do administrador</p>
-    {% endif %}
-    <a class="rounded bg-slate-800 px-4 py-2 text-white" href="{% url 'vagas:minhas' %}">Minhas vagas</a>
-{% elif user.role == 'ADMIN' %}
-    <a class="rounded bg-slate-800 px-4 py-2 text-white" href="{% url 'admin:index' %}">Abrir admin</a>
-{% endif %}
+
+<main class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-violet-50 px-4 py-8 sm:px-6 lg:px-8">
+
+    <div class="mx-auto max-w-6xl">
+
+        <!-- Cabeçalho -->
+        <header class="mb-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
+            <div>
+                <div class="mb-3 inline-flex items-center gap-2 rounded-full bg-violet-100 px-4 py-2 text-sm font-semibold text-violet-800">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-4 w-4"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         aria-hidden="true">
+                        <path d="m12 3 1.9 5.8L20 11l-6.1 2.2L12 19l-1.9-5.8L4 11l6.1-2.2L12 3Z"/>
+                    </svg>
+
+                    Sua jornada continua aqui
+                </div>
+
+                <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                    Painel principal
+                </h1>
+
+                <p class="mt-2 text-base text-slate-600 sm:text-lg">
+                    Bem-vindo(a) ao Recomeçar! Acompanhe suas atividades e oportunidades.
+                </p>
+            </div>
+
+            <!-- Identidade da plataforma -->
+            <div class="hidden items-center gap-3 rounded-2xl border border-violet-100 bg-white px-5 py-3 shadow-sm sm:flex">
+
+                <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-100 text-violet-700">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-7 w-7"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+                        <path d="M12 21c0-6 0-10 5-14"/>
+                        <path d="M12 17c-5 0-8-3-8-8 5 0 8 3 8 8Z"/>
+                        <path d="M12 12c0-5 3-8 8-8 0 5-3 8-8 8Z"/>
+                    </svg>
+
+                </div>
+
+                <div>
+                    <p class="text-lg font-bold text-violet-950">Recomeçar</p>
+                    <p class="text-xs text-slate-500">Talento que transforma</p>
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- Cartão de boas-vindas -->
+        <section class="mb-8 overflow-hidden rounded-3xl border border-violet-100 bg-white shadow-lg shadow-violet-100/50">
+
+            <div class="grid grid-cols-1 md:grid-cols-5">
+
+                <!-- Texto de boas-vindas -->
+                <div class="p-6 sm:p-8 md:col-span-3">
+
+                    <div class="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-violet-700">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-8 w-8"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.7"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21a8 8 0 0 1 16 0"/>
+                        </svg>
+
+                    </div>
+
+                    <p class="text-sm font-semibold uppercase tracking-wider text-violet-700">
+                        Área do usuário
+                    </p>
+
+                    <h2 class="mt-2 text-2xl font-bold text-slate-900 sm:text-3xl">
+                        Olá, {{ user.first_name|default:user.email }}!
+                    </h2>
+
+                    <p class="mt-3 max-w-xl text-base leading-relaxed text-slate-600">
+                        É muito bom ter você conosco. Este é seu espaço para acompanhar suas atividades e aproveitar as oportunidades disponíveis.
+                    </p>
+
+                    <div class="mt-5 inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-4 w-4 text-violet-700"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+
+                        Perfil: {{ user.role }}
+
+                    </div>
+
+                </div>
+
+                <!-- Ilustração decorativa -->
+                <div class="relative flex min-h-40 items-center justify-center overflow-hidden bg-gradient-to-br from-violet-100 via-purple-100 to-fuchsia-100 p-8 md:col-span-2">
+
+                    <div class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/40"></div>
+                    <div class="absolute -bottom-12 -left-8 h-36 w-36 rounded-full bg-violet-200/50"></div>
+
+                    <div class="relative flex h-28 w-28 items-center justify-center rounded-full bg-white/80 shadow-lg">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-16 w-16 text-violet-700"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.3"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M12 21c0-6 0-10 5-14"/>
+                            <path d="M12 17c-5 0-8-3-8-8 5 0 8 3 8 8Z"/>
+                            <path d="M12 12c0-5 3-8 8-8 0 5-3 8-8 8Z"/>
+                            <path d="M5 21h14"/>
+                        </svg>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Conteúdo conforme o tipo de usuário -->
+        {% if user.role == 'EGRESSA' %}
+
+            <!-- PAINEL DA EGRESSA -->
+            <section class="space-y-6">
+
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-violet-700">
+                        Área da egressa
+                    </p>
+
+                    <h2 class="mt-1 text-2xl font-bold text-slate-900">
+                        Suas oportunidades começam aqui
+                    </h2>
+
+                    <p class="mt-2 text-slate-600">
+                        Explore vagas e encontre novas possibilidades para sua trajetória profissional.
+                    </p>
+                </div>
+
+                <!-- Cartão de oportunidades -->
+                <div class="overflow-hidden rounded-2xl border border-violet-200 bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="h-1.5 bg-gradient-to-r from-violet-500 to-fuchsia-400"></div>
+
+                    <div class="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-violet-100 text-violet-700">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-7 w-7"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+                                    <rect x="3" y="7" width="18" height="14" rx="2"/>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                    <path d="M9 12h6"/>
+                                </svg>
+
+                            </div>
+
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">
+                                    Vagas de emprego
+                                </h3>
+
+                                <p class="mt-2 max-w-lg leading-relaxed text-slate-600">
+                                    Conheça empresas parceiras, encontre vagas disponíveis e descubra oportunidades que valorizam suas habilidades.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <a href="{% url 'vagas:lista' %}"
+                           class="inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-xl bg-violet-700 px-6 py-4 text-base font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-200">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+
+                            Ver vagas disponíveis
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- Mensagem de incentivo -->
+                <div class="rounded-2xl border border-violet-100 bg-violet-50 p-6">
+
+                    <div class="flex items-start gap-3">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="mt-0.5 h-6 w-6 shrink-0 text-violet-700"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M12 3v18M3 12h18"/>
+                        </svg>
+
+                        <div>
+                            <h3 class="font-bold text-violet-950">
+                                Seu talento merece espaço!
+                            </h3>
+
+                            <p class="mt-1 text-sm leading-relaxed text-slate-600">
+                                Cada habilidade, experiência e conhecimento pode abrir portas. Continue acreditando no seu potencial.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        {% elif user.role == 'EMPRESA' %}
+
+            <!-- PAINEL DA EMPRESA -->
+            <section class="space-y-6">
+
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-blue-800">
+                        Área da empresa
+                    </p>
+
+                    <h2 class="mt-1 text-2xl font-bold text-slate-900">
+                        Gestão da sua empresa
+                    </h2>
+
+                    <p class="mt-2 text-slate-600">
+                        Acompanhe sua situação e gerencie suas oportunidades de trabalho.
+                    </p>
+                </div>
+
+                <!-- Situação da empresa -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+                    <div class="h-1.5 bg-gradient-to-r from-blue-950 to-sky-500"></div>
+
+                    <div class="p-6 sm:p-8">
+
+                        <div class="flex flex-col gap-5 sm:flex-row sm:items-center">
+
+                            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-blue-950">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-7 w-7"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+                                    <rect x="3" y="7" width="18" height="14" rx="2"/>
+                                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                                </svg>
+
+                            </div>
+
+                            <div class="flex-1">
+
+                                <h3 class="text-xl font-bold text-slate-900">
+                                    Situação cadastral
+                                </h3>
+
+                                {% if user.empresa_profile.is_aprovada %}
+
+                                    <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-800">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             class="h-5 w-5"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="2"
+                                             stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             aria-hidden="true">
+                                            <path d="m5 12 4 4L19 6"/>
+                                        </svg>
+
+                                        Empresa aprovada
+
+                                    </div>
+
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-600">
+                                        Seu cadastro foi aprovado! Você pode acompanhar e administrar suas vagas na plataforma.
+                                    </p>
+
+                                {% else %}
+
+                                    <div class="mt-3 inline-flex items-center gap-2 rounded-full bg-amber-100 px-4 py-2 text-sm font-bold text-amber-900">
+
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             class="h-5 w-5"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="2"
+                                             stroke-linecap="round"
+                                             stroke-linejoin="round"
+                                             aria-hidden="true">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <path d="M12 8v4"/>
+                                            <path d="M12 16h.01"/>
+                                        </svg>
+
+                                        Aguardando aprovação
+
+                                    </div>
+
+                                    <p class="mt-3 text-sm leading-relaxed text-slate-600">
+                                        Seu cadastro está aguardando a avaliação do administrador. Assim que for aprovado, você poderá aproveitar os recursos disponíveis para empresas.
+                                    </p>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Gerenciamento de vagas -->
+                <div class="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm transition hover:shadow-md">
+
+                    <div class="h-1.5 bg-gradient-to-r from-blue-950 to-sky-500"></div>
+
+                    <div class="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-blue-950">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-7 w-7"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+                                    <path d="M20 7h-9"/>
+                                    <path d="M14 17H5"/>
+                                    <circle cx="17" cy="17" r="3"/>
+                                    <circle cx="7" cy="7" r="3"/>
+                                </svg>
+
+                            </div>
+
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">
+                                    Minhas vagas
+                                </h3>
+
+                                <p class="mt-2 max-w-lg leading-relaxed text-slate-600">
+                                    Acesse suas oportunidades de emprego, acompanhe os processos seletivos e gerencie suas publicações.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <a href="{% url 'vagas:minhas' %}"
+                           class="inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-xl bg-blue-950 px-6 py-4 text-base font-bold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:bg-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-200">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <path d="M8 6h13"/>
+                                <path d="M8 12h13"/>
+                                <path d="M8 18h13"/>
+                                <path d="M3 6h.01"/>
+                                <path d="M3 12h.01"/>
+                                <path d="M3 18h.01"/>
+                            </svg>
+
+                            Minhas vagas
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <!-- Mensagem institucional -->
+                <div class="rounded-2xl border border-blue-100 bg-blue-50 p-6">
+
+                    <div class="flex items-start gap-3">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="mt-0.5 h-6 w-6 shrink-0 text-blue-900"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+
+                        <div>
+                            <h3 class="font-bold text-blue-950">
+                                Faça parte dessa transformação!
+                            </h3>
+
+                            <p class="mt-1 text-sm leading-relaxed text-slate-600">
+                                Sua empresa pode contribuir para ampliar oportunidades profissionais e valorizar talentos.
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        {% elif user.role == 'ADMIN' %}
+
+            <!-- PAINEL DO ADMINISTRADOR -->
+            <section class="space-y-6">
+
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-blue-800">
+                        Área administrativa
+                    </p>
+
+                    <h2 class="mt-1 text-2xl font-bold text-slate-900">
+                        Administração da plataforma
+                    </h2>
+
+                    <p class="mt-2 text-slate-600">
+                        Acesse as ferramentas administrativas do Recomeçar.
+                    </p>
+                </div>
+
+                <!-- Cartão administrativo -->
+                <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+                    <div class="h-1.5 bg-gradient-to-r from-slate-800 to-blue-600"></div>
+
+                    <div class="flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+
+                        <div class="flex items-start gap-4">
+
+                            <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-slate-100 text-slate-800">
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-7 w-7"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 2.94-.08-.02a1.7 1.7 0 0 0-1.76.43l-.06.06h-3.4l-.06-.06a1.7 1.7 0 0 0-1.76-.43l-.08.02-1.7-2.94.06-.06A1.7 1.7 0 0 0 9.6 15l-.02-.08v-3.4l.02-.08a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-2.94.08.02a1.7 1.7 0 0 0 1.76-.43l.06-.06h3.4l.06.06a1.7 1.7 0 0 0 1.76.43l.08-.02 1.7 2.94-.06.06A1.7 1.7 0 0 0 19.4 11l.02.08V15l-.02.08Z"/>
+                                </svg>
+
+                            </div>
+
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">
+                                    Painel administrativo
+                                </h3>
+
+                                <p class="mt-2 max-w-lg leading-relaxed text-slate-600">
+                                    Gerencie as configurações e os recursos administrativos da plataforma.
+                                </p>
+                            </div>
+
+                        </div>
+
+                        <a href="{% url 'admin:index' %}"
+                           class="inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-xl bg-slate-900 px-6 py-4 text-base font-bold text-white shadow-lg shadow-slate-300 transition hover:-translate-y-0.5 hover:bg-slate-800 focus:outline-none focus:ring-4 focus:ring-slate-300">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="14" width="7" height="7" rx="1"/>
+                                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                            </svg>
+
+                            Abrir administração
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+        <!-- Rodapé -->
+        <footer class="mt-12 border-t border-slate-200 py-6 text-center">
+
+            <div class="inline-flex items-center justify-center gap-2 text-sm font-medium text-slate-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5 text-violet-500"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+                    <path d="M12 21s-8-4.5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6.5-8 11-8 11Z"/>
+                </svg>
+
+                Toda mulher merece uma nova oportunidade.
+
+            </div>
+
+            <p class="mt-3 text-xs text-slate-400">
+                Recomeçar — Talento que transforma.
+            </p>
+
+        </footer>
+
+    </div>
+
+</main>
+
 {% endblock %}

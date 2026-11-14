@@ -1,47 +1,551 @@
+<!-- Caminho: templates/base.html -->
+
 <!doctype html>
 <html lang="pt-br">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="description" content="Recomeçar - Plataforma de oportunidades, talentos e inclusão profissional.">
+
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
     <title>{% block title %}Recomeçar{% endblock %}</title>
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900">
-    <header class="border-b bg-white">
-        <nav class="mx-auto flex max-w-4xl items-center gap-4 p-4">
-            <a class="font-bold" href="{% url 'vagas:lista' %}">Recomeçar</a>
-            <a href="{% url 'vagas:lista' %}">Vagas</a>
-        {% if request.user.is_authenticated %}
-            {% if request.user.role == 'EGRESSA' %}
-                <a href="{% url 'accounts:painel' %}">Painel</a>
-            {% elif request.user.role == 'EMPRESA' %}
-                <a href="{% url 'vagas:minhas' %}">Minhas vagas</a>
-                <a href="{% url 'accounts:painel' %}">Painel</a>
-            {% elif request.user.role == 'ADMIN' %}
-                <a href="{% url 'accounts:painel' %}">Painel</a>
-                <a href="{% url 'admin:index' %}">Admin</a>
-            {% endif %}
-            <form method="post" action="{% url 'accounts:logout' %}" class="ml-auto inline">
-                {% csrf_token %}
-                <button class="rounded bg-slate-800 px-3 py-1 text-white" type="submit">Sair</button>
-            </form>
-        {% else %}
-            <a class="ml-auto" href="{% url 'accounts:login' %}">Entrar</a>
-            <a href="{% url 'accounts:cadastro_egressa' %}">Cadastrar egressa</a>
-            <a href="{% url 'accounts:cadastro_empresa' %}">Cadastrar empresa</a>
-        {% endif %}
+
+<body class="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-800 antialiased">
+
+    <!-- ========================================== -->
+    <!-- CABEÇALHO E NAVEGAÇÃO PRINCIPAL            -->
+    <!-- ========================================== -->
+
+    <header class="sticky top-0 z-50 border-b border-violet-100 bg-white shadow-sm">
+
+        <nav aria-label="Navegação principal"
+             class="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-4 sm:px-6 lg:px-8">
+
+            <!-- LOGO E IDENTIDADE -->
+            <a href="{% url 'vagas:lista' %}"
+               class="group flex shrink-0 items-center gap-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-violet-100">
+
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 transition group-hover:bg-violet-200">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-7 w-7"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <path d="M12 21c0-6 0-10 5-14"/>
+                        <path d="M12 17c-5 0-8-3-8-8 5 0 8 3 8 8Z"/>
+                        <path d="M12 12c0-5 3-8 8-8 0 5-3 8-8 8Z"/>
+
+                    </svg>
+
+                </div>
+
+                <div>
+                    <span class="block text-2xl font-bold tracking-tight text-violet-950">
+                        Recomeçar
+                    </span>
+
+                    <span class="block text-xs font-medium text-slate-500">
+                        Talento que transforma
+                    </span>
+                </div>
+
+            </a>
+
+            <!-- LINKS DE NAVEGAÇÃO -->
+            <div class="flex w-full flex-wrap items-center gap-2 border-t border-slate-100 pt-3 sm:w-auto sm:flex-1 sm:border-t-0 sm:pt-0">
+
+                <!-- VAGAS -->
+                <a href="{% url 'vagas:lista' %}"
+                   class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-5 w-5 text-violet-600"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.8"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <rect x="3" y="7" width="18" height="14" rx="2"/>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+
+                    </svg>
+
+                    Vagas
+
+                </a>
+
+                {% if request.user.is_authenticated %}
+
+                    <!-- NAVEGAÇÃO DA EGRESSA -->
+                    {% if request.user.role == 'EGRESSA' %}
+
+                        <a href="{% url 'accounts:painel' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5 text-violet-600"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+
+                                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                <rect x="14" y="14" width="7" height="7" rx="1"/>
+
+                            </svg>
+
+                            Meu painel
+
+                        </a>
+
+                    <!-- NAVEGAÇÃO DA EMPRESA -->
+                    {% elif request.user.role == 'EMPRESA' %}
+
+                        <a href="{% url 'vagas:minhas' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5 text-blue-800"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+
+                                <path d="M8 6h13"/>
+                                <path d="M8 12h13"/>
+                                <path d="M8 18h13"/>
+                                <path d="M3 6h.01"/>
+                                <path d="M3 12h.01"/>
+                                <path d="M3 18h.01"/>
+
+                            </svg>
+
+                            Minhas vagas
+
+                        </a>
+
+                        <a href="{% url 'accounts:painel' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5 text-blue-800"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+
+                                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                <rect x="14" y="14" width="7" height="7" rx="1"/>
+
+                            </svg>
+
+                            Painel
+
+                        </a>
+
+                    <!-- NAVEGAÇÃO DO ADMINISTRADOR -->
+                    {% elif request.user.role == 'ADMIN' %}
+
+                        <a href="{% url 'accounts:painel' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5 text-blue-800"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+
+                                <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                <rect x="14" y="14" width="7" height="7" rx="1"/>
+
+                            </svg>
+
+                            Painel
+
+                        </a>
+
+                        <a href="{% url 'admin:index' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5 text-blue-800"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 2.94-.08-.02a1.7 1.7 0 0 0-1.76.43l-.06.06h-3.4l-.06-.06a1.7 1.7 0 0 0-1.76-.43l-.08.02-1.7-2.94.06-.06A1.7 1.7 0 0 0 9.6 15l-.02-.08v-3.4l.02-.08a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-2.94.08.02a1.7 1.7 0 0 0 1.76-.43l.06-.06h3.4l.06.06a1.7 1.7 0 0 0 1.76.43l.08-.02 1.7 2.94-.06.06A1.7 1.7 0 0 0 19.4 11l.02.08V15l-.02.08Z"/>
+
+                            </svg>
+
+                            Administração
+
+                        </a>
+
+                    {% endif %}
+
+                    <!-- BOTÃO SAIR -->
+                    <form method="post"
+                          action="{% url 'accounts:logout' %}"
+                          class="ml-auto w-full sm:w-auto">
+
+                        {% csrf_token %}
+
+                        <button type="submit"
+                                class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-slate-100 px-5 py-2 text-sm font-bold text-slate-700 transition hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-4 focus:ring-red-100 sm:w-auto">
+
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 class="h-5 w-5"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <path d="m16 17 5-5-5-5"/>
+                                <path d="M21 12H9"/>
+
+                            </svg>
+
+                            Sair
+
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    <!-- NAVEGAÇÃO PARA VISITANTES -->
+
+                    <a href="{% url 'accounts:login' %}"
+                       class="ml-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-700 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-200">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-5 w-5"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <path d="m10 17 5-5-5-5"/>
+                            <path d="M15 12H3"/>
+
+                        </svg>
+
+                        Entrar
+
+                    </a>
+
+                    <a href="{% url 'accounts:cadastro_egressa' %}"
+                       class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-900 transition hover:bg-violet-100 focus:outline-none focus:ring-4 focus:ring-violet-100">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-5 w-5"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <circle cx="12" cy="8" r="4"/>
+                            <path d="M4 21a8 8 0 0 1 16 0"/>
+
+                        </svg>
+
+                        Cadastro de egressa
+
+                    </a>
+
+                    <a href="{% url 'accounts:cadastro_empresa' %}"
+                       class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-950 transition hover:bg-blue-100 focus:outline-none focus:ring-4 focus:ring-blue-100">
+
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             class="h-5 w-5"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+
+                            <rect x="3" y="7" width="18" height="14" rx="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+
+                        </svg>
+
+                        Cadastro de empresa
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
         </nav>
+
     </header>
+
+
+    <!-- ========================================== -->
+    <!-- MENSAGENS DO DJANGO                        -->
+    <!-- ========================================== -->
+
     {% if messages %}
-        <ul class="mx-auto max-w-4xl space-y-2 p-4">
-            {% for message in messages %}
-                <li class="rounded p-3 {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-800{% else %}bg-blue-100 text-blue-800{% endif %}">{{ message }}</li>
-            {% endfor %}
-        </ul>
+
+        <section aria-label="Notificações"
+                 class="mx-auto w-full max-w-7xl px-4 pt-5 sm:px-6 lg:px-8">
+
+            <ul class="space-y-3" aria-live="polite">
+
+                {% for message in messages %}
+
+                    <li class="flex items-start gap-3 rounded-2xl border p-4 shadow-sm
+
+                        {% if message.tags == 'success' %}
+                            border-green-200 bg-green-50 text-green-900
+
+                        {% elif message.tags == 'error' %}
+                            border-red-200 bg-red-50 text-red-900
+
+                        {% elif message.tags == 'warning' %}
+                            border-amber-200 bg-amber-50 text-amber-950
+
+                        {% else %}
+                            border-blue-200 bg-blue-50 text-blue-950
+
+                        {% endif %}">
+
+                        <!-- Ícone da mensagem -->
+                        <div class="mt-0.5 shrink-0">
+
+                            {% if message.tags == 'success' %}
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-6 w-6 text-green-700"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <path d="m5 12 4 4L19 6"/>
+
+                                </svg>
+
+                            {% elif message.tags == 'error' %}
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-6 w-6 text-red-700"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="m15 9-6 6"/>
+                                    <path d="m9 9 6 6"/>
+
+                                </svg>
+
+                            {% elif message.tags == 'warning' %}
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-6 w-6 text-amber-700"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <path d="M12 9v4"/>
+                                    <path d="M12 17h.01"/>
+                                    <path d="M10.3 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.7 3.86a2 2 0 0 0-3.4 0Z"/>
+
+                                </svg>
+
+                            {% else %}
+
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="h-6 w-6 text-blue-700"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 16v-4"/>
+                                    <path d="M12 8h.01"/>
+
+                                </svg>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- Texto da mensagem -->
+                        <div class="flex-1 text-sm font-medium leading-relaxed sm:text-base">
+                            {{ message }}
+                        </div>
+
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        </section>
+
     {% endif %}
-    <main class="mx-auto max-w-4xl p-4">
-        {% block content %}{% endblock %}
+
+
+    <!-- ========================================== -->
+    <!-- CONTEÚDO PRINCIPAL                         -->
+    <!-- ========================================== -->
+
+    <main id="conteudo-principal"
+          class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+
+        {% block content %}
+
+        {% endblock %}
+
     </main>
-    <footer class="mx-auto max-w-4xl p-4 text-sm text-slate-500">Recomeçar</footer>
+
+
+    <!-- ========================================== -->
+    <!-- RODAPÉ                                     -->
+    <!-- ========================================== -->
+
+    <footer class="mt-auto border-t border-violet-100 bg-white">
+
+        <div class="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-4 px-4 py-7 sm:flex-row sm:px-6 lg:px-8">
+
+            <!-- Marca -->
+            <div class="flex items-center gap-3">
+
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-violet-700">
+
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         class="h-6 w-6"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         aria-hidden="true">
+
+                        <path d="M12 21c0-6 0-10 5-14"/>
+                        <path d="M12 17c-5 0-8-3-8-8 5 0 8 3 8 8Z"/>
+                        <path d="M12 12c0-5 3-8 8-8 0 5-3 8-8 8Z"/>
+
+                    </svg>
+
+                </div>
+
+                <div>
+                    <p class="font-bold text-violet-950">
+                        Recomeçar
+                    </p>
+
+                    <p class="text-xs text-slate-500">
+                        Talento que transforma.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Mensagem institucional -->
+            <div class="flex items-center gap-2 text-center text-sm text-slate-500">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5 shrink-0 text-violet-500"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     aria-hidden="true">
+
+                    <path d="M12 21s-8-4.5-8-11a5 5 0 0 1 8-4 5 5 0 0 1 8 4c0 6.5-8 11-8 11Z"/>
+
+                </svg>
+
+                <span>
+                    Toda mulher merece uma nova oportunidade.
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- Assinatura inferior -->
+        <div class="border-t border-slate-100 bg-slate-50 px-4 py-3 text-center">
+
+            <p class="text-xs text-slate-400">
+                Recomeçar &copy; {% now "Y" %} — Todos os direitos reservados.
+            </p>
+
+        </div>
+
+    </footer>
+
 </body>
 </html>
