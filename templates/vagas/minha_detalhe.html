@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ vaga.titulo }}{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-2xl font-bold">{{ vaga.titulo }}</h1>
+<div class="mb-6 rounded border bg-white p-6">
+    <p class="whitespace-pre-line">{{ vaga.descricao|linebreaks }}</p>
+    <p class="mt-4">{{ vaga.requisitos|linebreaks }}</p>
+</div>
+<h2 class="mb-3 text-xl font-semibold">Candidatas</h2>
+<table class="w-full rounded border bg-white text-left">
+    <thead><tr><th class="p-3">E-mail</th><th class="p-3">Data</th></tr></thead>
+    <tbody>
+    {% for candidata in candidatas %}
+        <tr class="border-t"><td class="p-3">{{ candidata.candidata__email }}</td><td class="p-3">{{ candidata.data_candidatura }}</td></tr>
+    {% empty %}
+        <tr><td class="p-3" colspan="2">Nenhuma candidatura.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -3,28 +3,45 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
     <title>{% block title %}Recomeçar{% endblock %}</title>
 </head>
-<body>
-    <header>
-        <a href="{% url 'accounts:login' %}">Recomeçar</a>
+<body class="min-h-screen bg-slate-50 text-slate-900">
+    <header class="border-b bg-white">
+        <nav class="mx-auto flex max-w-4xl items-center gap-4 p-4">
+            <a class="font-bold" href="{% url 'vagas:lista' %}">Recomeçar</a>
+            <a href="{% url 'vagas:lista' %}">Vagas</a>
         {% if request.user.is_authenticated %}
-            <a href="{% url 'accounts:painel' %}">Painel</a>
-            <form method="post" action="{% url 'accounts:logout' %}" style="display:inline">
+            {% if request.user.role == 'EGRESSA' %}
+                <a href="{% url 'accounts:painel' %}">Painel</a>
+            {% elif request.user.role == 'EMPRESA' %}
+                <a href="{% url 'vagas:minhas' %}">Minhas vagas</a>
+                <a href="{% url 'accounts:painel' %}">Painel</a>
+            {% elif request.user.role == 'ADMIN' %}
+                <a href="{% url 'accounts:painel' %}">Painel</a>
+                <a href="{% url 'admin:index' %}">Admin</a>
+            {% endif %}
+            <form method="post" action="{% url 'accounts:logout' %}" class="ml-auto inline">
                 {% csrf_token %}
-                <button type="submit">Sair</button>
+                <button class="rounded bg-slate-800 px-3 py-1 text-white" type="submit">Sair</button>
             </form>
+        {% else %}
+            <a class="ml-auto" href="{% url 'accounts:login' %}">Entrar</a>
+            <a href="{% url 'accounts:cadastro_egressa' %}">Cadastrar egressa</a>
+            <a href="{% url 'accounts:cadastro_empresa' %}">Cadastrar empresa</a>
         {% endif %}
+        </nav>
     </header>
     {% if messages %}
-        <ul>
+        <ul class="mx-auto max-w-4xl space-y-2 p-4">
             {% for message in messages %}
-                <li>{{ message }}</li>
+                <li class="rounded p-3 {% if message.tags == 'success' %}bg-green-100 text-green-800{% elif message.tags == 'error' %}bg-red-100 text-red-800{% elif message.tags == 'warning' %}bg-yellow-100 text-yellow-800{% else %}bg-blue-100 text-blue-800{% endif %}">{{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
-    <main>
+    <main class="mx-auto max-w-4xl p-4">
         {% block content %}{% endblock %}
     </main>
+    <footer class="mx-auto max-w-4xl p-4 text-sm text-slate-500">Recomeçar</footer>
 </body>
 </html>

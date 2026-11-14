@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ vaga.titulo }}{% endblock %}
+
+{% block content %}
+<article class="rounded border bg-white p-6 shadow-sm">
+    <h1 class="mb-2 text-2xl font-bold">{{ vaga.titulo }}</h1>
+    <p class="mb-4">{{ vaga.empresa.razao_social }}</p>
+    <p class="mb-4 whitespace-pre-line">{{ vaga.descricao|linebreaks }}</p>
+    <h2 class="font-semibold">Requisitos</h2>
+    <div class="mb-4">{{ vaga.requisitos|linebreaks }}</div>
+    <p class="mb-4">{% if vaga.salario %}R$ {{ vaga.salario }}{% else %}Salário não informado{% endif %}</p>
+    {% if user.is_authenticated and user.role == 'EGRESSA' %}
+        <p class="mb-3 text-sm text-slate-600">Ao se candidatar, seu e-mail será compartilhado com a empresa responsável pela vaga.</p>
+        {% if ja_candidatou %}
+            <p class="text-slate-600">Você já se candidatou a esta vaga.</p>
+        {% else %}
+            <form method="post" action="{% url 'vagas:candidatar' vaga.pk %}">
+                {% csrf_token %}
+                <button class="rounded bg-blue-700 px-4 py-2 text-white" type="submit">Candidatar-se</button>
+            </form>
+        {% endif %}
+    {% endif %}
+</article>
+{% endblock %}
