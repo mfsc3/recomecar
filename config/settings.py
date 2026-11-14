@@ -1,5 +1,6 @@
 # config/settings.py
 from pathlib import Path
+import sys
 
 import dj_database_url
 from decouple import Csv, config
@@ -37,7 +38,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -51,8 +52,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL')),
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL'),
+        conn_max_age=60,
+        conn_health_checks=True,
+    ),
 }
+
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+    PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -78,6 +92,8 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 LOGIN_URL = 'accounts:login'
+LOGIN_REDIRECT_URL = 'accounts:painel'
+LOGOUT_REDIRECT_URL = 'accounts:login'
 
 if not DEBUG:
     SECURE_SSL_REDIRECT = True

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel{% endblock %}
+
+{% block content %}
+<h1>Painel</h1>
+<p>Olá, {{ user.first_name|default:user.email }}. Seu perfil: {{ user.role }}.</p>
+{% endblock %}

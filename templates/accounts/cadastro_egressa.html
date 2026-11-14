@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro de egressa{% endblock %}
+
+{% block content %}
+<h1>Cadastro de egressa</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Cadastrar</button>
+</form>
+{% endblock %}
