@@ -148,7 +148,7 @@ class VagaDeleteView(EmpresaComPerfilMixin, DeleteView):
             empresa=self.empresa,
         )
 
-    def delete(self, request, *args, **kwargs):
-        response = super().delete(request, *args, **kwargs)
-        messages.success(request, 'Vaga excluída com sucesso.')
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Vaga excluída com sucesso.')
         return response

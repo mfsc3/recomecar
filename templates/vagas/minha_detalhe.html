@@ -5,8 +5,8 @@
 {% block content %}
 <h1 class="mb-4 text-2xl font-bold">{{ vaga.titulo }}</h1>
 <div class="mb-6 rounded border bg-white p-6">
-    <p class="whitespace-pre-line">{{ vaga.descricao|linebreaks }}</p>
-    <p class="mt-4">{{ vaga.requisitos|linebreaks }}</p>
+    <div>{{ vaga.descricao|linebreaks }}</div>
+    <div class="mt-4">{{ vaga.requisitos|linebreaks }}</div>
 </div>
 <h2 class="mb-3 text-xl font-semibold">Candidatas</h2>
 <table class="w-full rounded border bg-white text-left">

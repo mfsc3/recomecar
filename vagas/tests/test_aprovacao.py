@@ -68,9 +68,12 @@ class AprovacaoTests(VagaTestCase):
         self.client.force_login(self.empresa.user)
         self.assertEqual(self.client.get(reverse('vagas:minhas')).status_code, 200)
         self.assertEqual(self.client.get(reverse('vagas:minha_detalhe', args=[vaga.pk])).status_code, 200)
-        response = self.client.post(reverse('vagas:excluir', args=[vaga.pk]))
-        self.assertRedirects(response, reverse('vagas:minhas'))
+        response = self.client.post(
+            reverse('vagas:excluir', args=[vaga.pk]),
+            follow=True,
+        )
         self.assertFalse(Vaga.objects.filter(pk=vaga.pk).exists())
+        self.assertContains(response, 'Vaga excluída com sucesso.')
 
     def test_revoking_approval_hides_public_vaga_and_blocks_application(self):
         self.empresa.is_aprovada = True

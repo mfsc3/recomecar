@@ -6,7 +6,7 @@
 <article class="rounded border bg-white p-6 shadow-sm">
     <h1 class="mb-2 text-2xl font-bold">{{ vaga.titulo }}</h1>
     <p class="mb-4">{{ vaga.empresa.razao_social }}</p>
-    <p class="mb-4 whitespace-pre-line">{{ vaga.descricao|linebreaks }}</p>
+    <div class="mb-4">{{ vaga.descricao|linebreaks }}</div>
     <h2 class="font-semibold">Requisitos</h2>
     <div class="mb-4">{{ vaga.requisitos|linebreaks }}</div>
     <p class="mb-4">{% if vaga.salario %}R$ {{ vaga.salario }}{% else %}Salário não informado{% endif %}</p>
