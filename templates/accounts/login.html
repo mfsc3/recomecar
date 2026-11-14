@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Entrar{% endblock %}
+
+{% block content %}
+<h1>Entrar</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Entrar</button>
+</form>
+<p><a href="{% url 'accounts:cadastro_egressa' %}">Criar cadastro de egressa</a></p>
+<p><a href="{% url 'accounts:cadastro_empresa' %}">Criar cadastro de empresa</a></p>
+{% endblock %}
