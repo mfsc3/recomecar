@@ -3,6 +3,18 @@
 {% block title %}Painel{% endblock %}
 
 {% block content %}
-<h1>Painel</h1>
-<p>Olá, {{ user.first_name|default:user.email }}. Seu perfil: {{ user.role }}.</p>
+<h1 class="mb-4 text-2xl font-bold">Painel</h1>
+<p class="mb-6">Olá, {{ user.first_name|default:user.email }}. Seu perfil: {{ user.role }}.</p>
+{% if user.role == 'EGRESSA' %}
+    <a class="rounded bg-slate-800 px-4 py-2 text-white" href="{% url 'vagas:lista' %}">Ver vagas</a>
+{% elif user.role == 'EMPRESA' %}
+    {% if user.empresa_profile.is_aprovada %}
+        <p class="mb-4 text-green-700">Empresa aprovada</p>
+    {% else %}
+        <p class="mb-4 text-yellow-700">Aguardando aprovação do administrador</p>
+    {% endif %}
+    <a class="rounded bg-slate-800 px-4 py-2 text-white" href="{% url 'vagas:minhas' %}">Minhas vagas</a>
+{% elif user.role == 'ADMIN' %}
+    <a class="rounded bg-slate-800 px-4 py-2 text-white" href="{% url 'admin:index' %}">Abrir admin</a>
+{% endif %}
 {% endblock %}

@@ -24,6 +24,12 @@ class EmpresaProfile(models.Model):
         ],
     )
     razao_social = models.CharField(max_length=255)
+    is_aprovada = models.BooleanField(
+        default=False,
+        db_index=True,
+        verbose_name='empresa aprovada',
+        help_text='Somente o administrador pode aprovar. Empresas não aprovadas não publicam vagas.',
+    )
 
     class Meta:
         verbose_name = 'perfil de empresa'

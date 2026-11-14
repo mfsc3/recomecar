@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir vaga{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 text-2xl font-bold">Excluir vaga</h1>
+<p class="mb-4">Tem certeza que deseja excluir “{{ object.titulo }}”?</p>
+<p class="mb-4">As candidaturas desta vaga também serão apagadas. Para apenas tirar a vaga do ar, edite e desmarque “ativa”.</p>
+<form method="post">
+    {% csrf_token %}
+    <button class="rounded bg-red-700 px-4 py-2 text-white" type="submit">Confirmar exclusão</button>
+    <a class="ml-3" href="{% url 'vagas:minhas' %}">Cancelar</a>
+</form>
+{% endblock %}
