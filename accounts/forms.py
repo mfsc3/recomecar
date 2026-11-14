@@ -52,12 +52,11 @@ class CadastroEmpresaForm(CadastroEgressaForm):
 
 class EmailLoginForm(AuthenticationForm):
     username = forms.EmailField(label='E-mail')
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        message = 'E-mail ou senha incorretos.'
-        self.error_messages['invalid_login'] = message
-        self.error_messages['inactive'] = message
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        'invalid_login': 'E-mail ou senha incorretos.',
+        'inactive': 'E-mail ou senha incorretos.',
+    }
 
     def clean_username(self):
         return self.cleaned_data['username'].strip().lower()

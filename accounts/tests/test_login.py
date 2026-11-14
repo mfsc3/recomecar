@@ -1,5 +1,7 @@
 from django.test import TestCase
+from django.contrib.auth.forms import AuthenticationForm
 
+from accounts.forms import EmailLoginForm
 from accounts.models import CustomUser
 
 
@@ -20,6 +22,13 @@ class LoginTests(TestCase):
             {'username': 'LOGIN@EXAMPLE.COM', 'password': 'SenhaForte123!'},
         )
         self.assertRedirects(response, '/painel/')
+
+    def test_email_form_does_not_mutate_default_authentication_messages(self):
+        default_message = AuthenticationForm().error_messages['invalid_login']
+        EmailLoginForm()
+        default_form = AuthenticationForm()
+        self.assertEqual(default_form.error_messages['invalid_login'], default_message)
+        self.assertNotEqual(default_form.error_messages['invalid_login'], 'E-mail ou senha incorretos.')
 
     def test_unknown_email_and_wrong_password_have_same_message(self):
         unknown = self.client.post(
