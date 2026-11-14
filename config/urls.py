@@ -16,9 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/login/', RedirectView.as_view(
+        pattern_name='accounts:login', permanent=False,
+    )),
+    path('accounts/signup/', RedirectView.as_view(
+        pattern_name='accounts:cadastro_egressa', permanent=False,
+    )),
+    path('accounts/password/reset/', RedirectView.as_view(
+        pattern_name='accounts:password_reset', permanent=False,
+    )),
     path('', include('accounts.urls')),
+    path('accounts/', include('allauth.urls')),
     path('vagas/', include('vagas.urls')),
 ]
