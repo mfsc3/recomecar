@@ -19,6 +19,8 @@ def processar_imagem(arquivo):
         arquivo.seek(0)
         img = Image.open(arquivo)
         formato = img.format
+        if formato == 'MPO':
+            formato = 'JPEG'
         if formato not in EXT:
             raise ValidationError('Use uma imagem JPEG, PNG ou WEBP.')
         if img.width * img.height > settings.VITRINE_IMAGEM_MAX_PIXELS:

@@ -73,6 +73,97 @@ class ImagemVitrineTests(VitrineTestCase):
         with Image.open(result) as image:
             self.assertEqual(len(image.getexif()), 0)
 
+    def test_mpo_e_convertido_para_jpeg(self):
+        from io import BytesIO
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from PIL import Image
+        first = Image.new('RGB', (16, 16), 'red')
+        second = Image.new('RGB', (16, 16), 'blue')
+        output = BytesIO()
+        first.save(output, format='MPO', save_all=True, append_images=[second])
+        upload = SimpleUploadedFile(
+            'foto.mpo',
+            output.getvalue(),
+            content_type='image/mpo',
+        )
+        result = processar_imagem(upload)
+        self.assertTrue(result.name.endswith('.jpg'))
+        result.seek(0)
+        with Image.open(result) as image:
+            self.assertEqual(image.format, 'JPEG')
+
+    def test_exif_png_e_removido(self):
+        from io import BytesIO
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from PIL import Image
+        from PIL.TiffImagePlugin import IFDRational
+        output = BytesIO()
+        image = Image.new('RGB', (16, 16), 'white')
+        exif = Image.Exif()
+        exif[34853] = {
+            1: 'N',
+            2: (
+                IFDRational(40, 1),
+                IFDRational(0, 1),
+                IFDRational(0, 1),
+            ),
+            3: 'W',
+            4: (
+                IFDRational(74, 1),
+                IFDRational(0, 1),
+                IFDRational(0, 1),
+            ),
+        }
+        image.save(output, format='PNG', exif=exif)
+        upload = SimpleUploadedFile(
+            'com-exif.png',
+            output.getvalue(),
+            content_type='image/png',
+        )
+        with Image.open(BytesIO(upload.read())) as original:
+            self.assertGreater(len(original.getexif()), 0)
+        upload.seek(0)
+        result = processar_imagem(upload)
+        result.seek(0)
+        with Image.open(result) as processed:
+            self.assertEqual(len(processed.getexif()), 0)
+
+    def test_exif_webp_e_removido(self):
+        from io import BytesIO
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from PIL import Image
+        from PIL.TiffImagePlugin import IFDRational
+        output = BytesIO()
+        image = Image.new('RGB', (16, 16), 'white')
+        exif = Image.Exif()
+        exif[34853] = {
+            1: 'N',
+            2: (
+                IFDRational(40, 1),
+                IFDRational(0, 1),
+                IFDRational(0, 1),
+            ),
+            3: 'W',
+            4: (
+                IFDRational(74, 1),
+                IFDRational(0, 1),
+                IFDRational(0, 1),
+            ),
+        }
+        image.save(output, format='WEBP', exif=exif)
+        upload = SimpleUploadedFile(
+            'com-exif.webp',
+            output.getvalue(),
+            content_type='image/webp',
+        )
+        with Image.open(BytesIO(upload.read())) as original:
+            self.assertGreater(len(original.getexif()), 0)
+        upload.seek(0)
+        result = processar_imagem(upload)
+        result.seek(0)
+        with Image.open(result) as processed:
+            self.assertEqual(len(processed.getexif()), 0)
+
     def test_texto_renomeado_rejeitado(self):
         from django.core.files.uploadedfile import SimpleUploadedFile
         upload = SimpleUploadedFile(

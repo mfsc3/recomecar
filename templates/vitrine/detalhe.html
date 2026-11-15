@@ -13,7 +13,7 @@
     {% if item.preco is not None %}
         <p class="mt-6 text-xl font-semibold text-slate-900">R$ {{ item.preco }}</p>
     {% endif %}
-    <div class="mt-6 whitespace-pre-line text-slate-700">{{ item.descricao|linebreaks }}</div>
+    <div class="mt-6 text-slate-700">{{ item.descricao|linebreaks }}</div>
     <div class="mt-8 border-t border-slate-200 pt-6">
         <h2 class="font-semibold text-slate-900">Contato</h2>
         <p class="mt-2 whitespace-pre-line text-slate-700">{{ item.contato }}</p>

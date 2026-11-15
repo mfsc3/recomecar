@@ -17,6 +17,7 @@ class ProdutoServicoAdmin(admin.ModelAdmin):
     search_fields = ('titulo', 'nome_exibicao', 'owner__email')
     readonly_fields = (
         'owner',
+        'imagem',
         'publicacao_aceita_em',
         'criado_em',
         'atualizado_em',

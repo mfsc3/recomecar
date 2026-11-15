@@ -25,7 +25,13 @@ class AdminVitrineTests(VitrineTestCase):
     def test_campos_readonly(self):
         self.assertEqual(
             set(self.admin.readonly_fields),
-            {'owner', 'publicacao_aceita_em', 'criado_em', 'atualizado_em'},
+            {
+                'owner',
+                'imagem',
+                'publicacao_aceita_em',
+                'criado_em',
+                'atualizado_em',
+            },
         )
 
     def test_list_display(self):
