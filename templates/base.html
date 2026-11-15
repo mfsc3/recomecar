@@ -87,6 +87,11 @@
 
                 </a>
 
+                <a href="{% url 'vitrine:lista' %}"
+                   class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100">
+                    Vitrine
+                </a>
+
                 {% if request.user.is_authenticated %}
 
                     <!-- NAVEGAÇÃO DA EGRESSA -->
@@ -114,6 +119,11 @@
 
                             Meu painel
 
+                        </a>
+
+                        <a href="{% url 'vitrine:minha' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100">
+                            Minha vitrine
                         </a>
 
                     <!-- NAVEGAÇÃO DA EMPRESA -->

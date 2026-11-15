@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Minha vitrine | Recomeçar{% endblock %}
+
+{% block content %}
+<section>
+    <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-bold text-violet-950">Minha vitrine</h1>
+            <p class="mt-2 text-slate-600">Gerencie seus produtos e serviços.</p>
+        </div>
+        <a href="{% url 'vitrine:criar' %}" class="rounded-xl bg-violet-700 px-5 py-3 font-semibold text-white hover:bg-violet-800">Novo item</a>
+    </div>
+
+    <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <table class="w-full text-left text-sm">
+            <thead class="border-b border-slate-200 bg-slate-50">
+                <tr>
+                    <th class="px-5 py-4">Título</th>
+                    <th class="px-5 py-4">Categoria</th>
+                    <th class="px-5 py-4">Ativo</th>
+                    <th class="px-5 py-4">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in itens %}
+                    <tr class="border-b border-slate-100 last:border-0">
+                        <td class="px-5 py-4 font-semibold">{{ item.titulo }}</td>
+                        <td class="px-5 py-4">{{ item.get_categoria_display }}</td>
+                        <td class="px-5 py-4">{% if item.is_ativo %}Sim{% else %}Não{% endif %}</td>
+                        <td class="px-5 py-4">
+                            <a href="{% url 'vitrine:editar' item.pk %}" class="text-violet-700 hover:underline">Editar</a>
+                            <a href="{% url 'vitrine:excluir' item.pk %}" class="ml-3 text-red-700 hover:underline">Excluir</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4" class="px-5 py-6 text-slate-600">Você ainda não publicou itens.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

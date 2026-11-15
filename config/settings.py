@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'axes',
     'accounts',
     'vagas',
+    'vitrine',
 ]
 
 MIDDLEWARE = [
@@ -144,6 +145,12 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+VITRINE_IMAGEM_MAX_BYTES = 2 * 1024 * 1024
+VITRINE_IMAGEM_MAX_PIXELS = 16_000_000
+VITRINE_IMAGEM_LADO_MAX = 1600
+VITRINE_MAX_ITENS = 20
 STORAGES = {
     'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
     'staticfiles': {
