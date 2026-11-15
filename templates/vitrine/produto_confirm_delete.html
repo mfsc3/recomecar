@@ -8,8 +8,8 @@
     <p class="mt-3 text-slate-600">Tem certeza que deseja excluir "{{ object.titulo }}"?</p>
     <form method="post" class="mt-6 flex gap-3">
         {% csrf_token %}
-        <button type="submit" class="rounded-xl bg-red-700 px-5 py-3 font-semibold text-white hover:bg-red-800">Excluir</button>
-        <a href="{% url 'vitrine:minha' %}" class="rounded-xl border px-5 py-3 font-semibold text-slate-700">Cancelar</a>
+        <button type="submit" class="rounded-xl bg-red-700 px-5 py-3 font-semibold text-white hover:bg-red-800 select-none transition-all duration-200 ease-in-out active:scale-95">Excluir</button>
+        <a href="{% url 'vitrine:minha' %}" class="rounded-xl border px-5 py-3 font-semibold text-slate-700 select-none transition-all duration-200 ease-in-out active:scale-95">Cancelar</a>
     </form>
 </section>
 {% endblock %}
