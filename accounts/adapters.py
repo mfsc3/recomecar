@@ -16,6 +16,9 @@ class CustomAccountAdapter(DefaultAccountAdapter):
 
 
 class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def is_open_for_signup(self, request, sociallogin):
+        return True
+
     def _bloquear(self, request):
         messages.error(
             request,

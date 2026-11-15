@@ -2,12 +2,18 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from django.contrib.messages.storage.fallback import FallbackStorage
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.sessions.middleware import SessionMiddleware
+from django.contrib.messages.middleware import MessageMiddleware
 from django.test import RequestFactory, TestCase
 
-from allauth.core.exceptions import ImmediateHttpResponse
-from allauth.socialaccount.models import SocialLogin
+from allauth.account.models import EmailAddress
+from allauth.core import context
+from allauth.core.exceptions import ImmediateHttpResponse, SignupClosedException
+from allauth.socialaccount.internal.flows.signup import process_signup
+from allauth.socialaccount.models import SocialAccount, SocialLogin
 
-from accounts.adapters import CustomSocialAccountAdapter
+from accounts.adapters import CustomAccountAdapter, CustomSocialAccountAdapter
 from accounts.models import CustomUser
 
 
@@ -46,6 +52,41 @@ class SocialAdapterTests(TestCase):
         self.assertFalse(user.is_staff)
         self.assertFalse(user.is_superuser)
         self.assertTrue(user.is_active)
+        self.assertFalse(user.has_usable_password())
+
+    def test_social_signup_is_open_but_local_signup_is_closed(self):
+        request = self.request()
+        sociallogin = self.login()
+
+        self.assertTrue(self.adapter.is_open_for_signup(request, sociallogin))
+        self.assertFalse(CustomAccountAdapter().is_open_for_signup(request))
+
+    def test_process_signup_creates_restricted_egressa(self):
+        request = self.factory.get('/accounts/google/login/callback/')
+        get_response = lambda request: None
+        SessionMiddleware(get_response).process_request(request)
+        request.session.save()
+        MessageMiddleware(get_response).process_request(request)
+        request.user = AnonymousUser()
+        sociallogin = SocialLogin(
+            user=CustomUser(email='new-google@example.com'),
+            account=SocialAccount(provider='google', uid='new-google-user'),
+            email_addresses=[
+                EmailAddress(email='new-google@example.com', verified=True),
+            ],
+        )
+
+        try:
+            with context.request_context(request):
+                process_signup(request, sociallogin)
+        except SignupClosedException as exc:
+            self.fail(f'process_signup() unexpectedly raised SignupClosedException: {exc}')
+
+        user = CustomUser.objects.get(email='new-google@example.com')
+        self.assertEqual(user.role, CustomUser.Role.EGRESSA)
+        self.assertTrue(user.aceitou_termo)
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user.is_superuser)
         self.assertFalse(user.has_usable_password())
     def test_extra_data_cannot_elevate_social_user(self):
         sociallogin = self.login()
