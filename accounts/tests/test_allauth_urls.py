@@ -27,9 +27,25 @@ class AllauthUrlTests(TestCase):
         response = self.client.get('/login/')
         self.assertContains(response, 'method="post"')
         self.assertContains(response, 'Continuar com o Google')
-        self.assertContains(response, 'Ao continuar com o Google, você aceita os Termos de Uso')
+        self.assertContains(response, 'Ao continuar com o Google, você aceita os')
+        self.assertContains(response, 'href="/termos/"')
+        self.assertContains(response, 'href="/privacidade/"')
         self.assertContains(response, 'csrfmiddlewaretoken')
 
     def test_company_registration_has_no_google_button(self):
         response = self.client.get('/cadastro/empresa/')
         self.assertNotContains(response, 'Continuar com o Google')
+
+    def test_extra_allauth_routes_redirect_to_panel(self):
+        for path in (
+            '/accounts/email/',
+            '/accounts/password/change/',
+            '/accounts/password/set/',
+            '/accounts/3rdparty/',
+        ):
+            response = self.client.get(path)
+            self.assertRedirects(response, '/painel/', fetch_redirect_response=False)
+
+    def test_confirmation_route_is_not_redirected(self):
+        response = self.client.get('/accounts/confirm-email/not-a-key/')
+        self.assertEqual(response.status_code, 200)

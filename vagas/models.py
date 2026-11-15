@@ -91,6 +91,7 @@ class Candidatura(models.Model):
         limit_choices_to={'role': 'EGRESSA'},
     )
     data_candidatura = models.DateTimeField(auto_now_add=True)
+    aceitou_compartilhar_em = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         constraints = [

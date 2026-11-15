@@ -39,11 +39,13 @@ class VagaAdmin(admin.ModelAdmin):
 
 @admin.register(Candidatura)
 class CandidaturaAdmin(admin.ModelAdmin):
-    list_display = ('candidata', 'vaga', 'data_candidatura')
+    list_display = ('candidata', 'vaga', 'data_candidatura', 'aceitou_compartilhar_em')
     list_filter = ('data_candidatura',)
     search_fields = ('candidata__email', 'vaga__titulo')
     list_select_related = ('candidata', 'vaga')
-    readonly_fields = ('vaga', 'candidata', 'data_candidatura')
+    readonly_fields = (
+        'vaga', 'candidata', 'data_candidatura', 'aceitou_compartilhar_em',
+    )
 
     def has_add_permission(self, request):
         return False

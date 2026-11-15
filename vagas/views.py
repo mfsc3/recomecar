@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -62,7 +63,11 @@ class CandidatarView(EgressaRequiredMixin, View):
         )
         try:
             with transaction.atomic():
-                Candidatura.objects.create(vaga=vaga, candidata=request.user)
+                Candidatura.objects.create(
+                    vaga=vaga,
+                    candidata=request.user,
+                    aceitou_compartilhar_em=timezone.now(),
+                )
         except (ValidationError, IntegrityError):
             messages.info(request, 'Você já se candidatou a esta vaga.')
         else:

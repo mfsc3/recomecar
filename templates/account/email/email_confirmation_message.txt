@@ -1,0 +1,6 @@
+Olá,
+
+Confirme seu e-mail acessando:
+{{ activate_url }}
+
+Se você não realizou este cadastro, ignore esta mensagem.

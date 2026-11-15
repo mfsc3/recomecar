@@ -29,6 +29,18 @@ urlpatterns = [
     path('accounts/password/reset/', RedirectView.as_view(
         pattern_name='accounts:password_reset', permanent=False,
     )),
+    path('accounts/email/', RedirectView.as_view(
+        pattern_name='accounts:painel', permanent=False,
+    )),
+    path('accounts/password/change/', RedirectView.as_view(
+        pattern_name='accounts:painel', permanent=False,
+    )),
+    path('accounts/password/set/', RedirectView.as_view(
+        pattern_name='accounts:painel', permanent=False,
+    )),
+    path('accounts/3rdparty/', RedirectView.as_view(
+        pattern_name='accounts:painel', permanent=False,
+    )),
     path('', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
     path('vagas/', include('vagas.urls')),
