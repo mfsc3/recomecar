@@ -1,4 +1,5 @@
 from django.contrib.sites.models import Site
+from django.core.cache import cache
 from django.core import mail
 from django.test import TestCase
 
@@ -7,6 +8,7 @@ from accounts.models import CustomUser
 
 class PasswordResetTests(TestCase):
     def setUp(self):
+        cache.clear()
         Site.objects.update_or_create(
             id=1,
             defaults={'domain': '127.0.0.1:8000', 'name': 'Recomeçar (dev)'},

@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
+from django.utils import timezone
 
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
@@ -50,6 +52,9 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         user.is_staff = False
         user.is_superuser = False
         user.is_active = True
+        if user.aceitou_termo_em is None:
+            user.aceitou_termo_em = timezone.now()
+            user.versao_termo = settings.TERMOS_VERSAO
         user.set_unusable_password()
         if email:
             user.email = email.strip().lower()

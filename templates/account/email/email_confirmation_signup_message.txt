@@ -1,0 +1,6 @@
+Olá,
+
+Para ativar seu cadastro no Recomeçar, confirme seu e-mail acessando:
+{{ activate_url }}
+
+Se você não realizou este cadastro, ignore esta mensagem.

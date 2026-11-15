@@ -44,6 +44,8 @@ class CustomUser(AbstractUser):
         db_index=True,
     )
     aceitou_termo = models.BooleanField(default=False)
+    aceitou_termo_em = models.DateTimeField(null=True, blank=True)
+    versao_termo = models.CharField(max_length=40, blank=True, default='')
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = CustomUserManager()

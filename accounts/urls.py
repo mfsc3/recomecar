@@ -5,8 +5,12 @@ from .views import (
     CadastroEmpresaView,
     CadastroEgressaView,
     EmailLoginView,
+    PrivacidadeView,
     PainelView,
     PostOnlyLogoutView,
+    RateLimitedPasswordResetView,
+    ReenviarConfirmacaoView,
+    TermosView,
 )
 
 app_name = 'accounts'
@@ -17,9 +21,16 @@ urlpatterns = [
     path('cadastro/egressa/', CadastroEgressaView.as_view(), name='cadastro_egressa'),
     path('cadastro/empresa/', CadastroEmpresaView.as_view(), name='cadastro_empresa'),
     path('painel/', PainelView.as_view(), name='painel'),
+    path('termos/', TermosView.as_view(), name='termos'),
+    path('privacidade/', PrivacidadeView.as_view(), name='privacidade'),
+    path(
+        'email/reenviar/',
+        ReenviarConfirmacaoView.as_view(),
+        name='reenviar_confirmacao',
+    ),
     path(
         'senha/recuperar/',
-        auth_views.PasswordResetView.as_view(
+        RateLimitedPasswordResetView.as_view(
             template_name='accounts/password_reset_form.html',
             email_template_name='accounts/password_reset_email.txt',
             subject_template_name='accounts/password_reset_subject.txt',

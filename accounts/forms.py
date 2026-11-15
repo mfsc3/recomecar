@@ -1,6 +1,8 @@
 # accounts/forms.py
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
+from django.urls import reverse
+from django.utils.html import format_html
 
 from .models import CustomUser
 from vagas.models import EmpresaProfile
@@ -31,6 +33,15 @@ class CadastroEgressaForm(UserCreationForm):
         model = CustomUser
         fields = ('first_name', 'email', 'aceitou_termo')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['aceitou_termo'].label = format_html(
+            'Li e aceito os <a href="{}">Termos de Uso</a> e a '
+            '<a href="{}">Política de Privacidade</a>',
+            reverse('accounts:termos'),
+            reverse('accounts:privacidade'),
+        )
+
     def clean_email(self):
         email = self.cleaned_data['email'].strip().lower()
         if CustomUser.objects.filter(email__iexact=email).exists():
@@ -60,3 +71,10 @@ class EmailLoginForm(AuthenticationForm):
 
     def clean_username(self):
         return self.cleaned_data['username'].strip().lower()
+
+
+class EmailReenvioForm(forms.Form):
+    email = forms.EmailField(label='E-mail')
+
+    def clean_email(self):
+        return self.cleaned_data['email'].strip().lower()
