@@ -426,7 +426,7 @@
 
                 {% for message in messages %}
 
-                    <li data-auto-dismiss class="flex items-start gap-3 rounded-2xl border p-4 shadow-sm
+                    <li{% if message.tags == 'success' or message.tags == 'info' %} data-auto-dismiss{% endif %} class="flex items-start gap-3 rounded-2xl border p-4 shadow-sm
 
                         {% if message.tags == 'success' %}
                             border-green-200 bg-green-50 text-green-900
