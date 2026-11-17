@@ -37,5 +37,8 @@
   {% else %}
     <p class="rounded-2xl border bg-white p-6">Currículo não disponível.</p>
   {% endif %}
+  {% if back_url %}
+    <p class="mt-6"><a href="{{ back_url }}" class="text-blue-600 hover:underline">← Voltar</a></p>
+  {% endif %}
 </main>
 {% endblock %}

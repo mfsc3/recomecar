@@ -151,3 +151,20 @@ class CurriculoTests(TestCase):
         first = Curriculo.objects.get_or_create(user=self.egressa_a)[0]
         second = Curriculo.objects.get_or_create(user=self.egressa_a)[0]
         self.assertEqual(first.pk, second.pk)
+
+    def test_empresa_e_admin_bloqueados_em_curriculo_editar(self):
+        empresa = CustomUser.objects.create_user(
+            email='empresa-editar@example.com',
+            password='SenhaForte123!',
+            role=CustomUser.Role.EMPRESA,
+        )
+        admin = CustomUser.objects.create_superuser(
+            email='admin-editar@example.com',
+            password='SenhaForte123!',
+        )
+        for user in (empresa, admin):
+            self.client.force_login(user)
+            self.assertEqual(
+                self.client.get(reverse('accounts:curriculo_editar')).status_code,
+                403,
+            )

@@ -200,6 +200,10 @@
                            class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800">
                             Meu currículo
                         </a>
+                        <a href="{% url 'vagas:minhas_candidaturas' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800">
+                            Minhas candidaturas
+                        </a>
 
                     <!-- NAVEGAÇÃO DA EMPRESA -->
                     {% elif request.user.role == 'EMPRESA' %}

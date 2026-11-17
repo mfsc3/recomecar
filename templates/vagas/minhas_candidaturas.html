@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Minhas candidaturas | Recomeçar{% endblock %}
+{% block content %}
+<main class="mx-auto max-w-5xl px-4 py-8">
+  <h1 class="mb-6 text-3xl font-bold text-slate-900">Minhas candidaturas</h1>
+  {% for c in candidaturas %}
+    <article class="mb-4 rounded-2xl border bg-white p-6">
+      <h2 class="text-xl font-bold">{{ c.vaga.titulo }}</h2>
+      <p class="mt-2 text-slate-600">{{ c.vaga.empresa.razao_social }}</p>
+      <p class="mt-1 text-sm text-slate-500">Candidatura em {{ c.data_candidatura|date:'d/m/Y H:i' }}</p>
+      <a href="{% url 'vagas:meu_snapshot' c.pk %}" class="mt-4 inline-flex text-blue-700 underline">Ver currículo enviado</a>
+    </article>
+  {% empty %}
+    <p class="rounded-2xl border bg-white p-6">Você ainda não se candidatou a nenhuma vaga.</p>
+  {% endfor %}
+  {% if is_paginated %}
+    <nav class="mt-6 flex gap-3">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="rounded border px-3 py-2">Anterior</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="rounded border px-3 py-2">Próxima</a>
+      {% endif %}
+    </nav>
+  {% endif %}
+</main>
+{% endblock %}
