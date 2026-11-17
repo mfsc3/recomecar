@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Excluir minha conta | Recomeçar{% endblock %}
+{% block content %}
+<main class="mx-auto max-w-2xl px-4 py-10">
+  <h1 class="mb-6 text-3xl font-bold text-red-700">Excluir minha conta</h1>
+  <section class="mb-6 rounded-2xl border border-red-200 bg-red-50 p-6">
+    <p class="font-bold text-red-800">Esta ação é irreversível.</p>
+    {% if request.user.role == 'EMPRESA' %}
+      <p class="mt-3 text-red-800">Todas as suas vagas serão apagadas.</p>
+      <p class="mt-2 text-red-800">TODAS as candidaturas recebidas nessas vagas serão apagadas.</p>
+      <p class="mt-2 text-red-800">O histórico de candidaturas de egressas será perdido permanentemente.</p>
+    {% else %}
+      <p class="mt-3 text-red-800">Seu currículo será apagado.</p>
+      <p class="mt-2 text-red-800">Suas candidaturas enviadas serão apagadas.</p>
+      <p class="mt-2 text-red-800">As empresas que receberam sua candidatura perderão acesso ao currículo.</p>
+    {% endif %}
+  </section>
+  <form method="post" class="rounded-2xl border bg-white p-6">
+    {% csrf_token %}
+    <label for="confirmacao" class="mb-2 block font-semibold">Digite EXCLUIR para confirmar</label>
+    <input id="confirmacao" name="confirmacao" autocomplete="off" class="w-full rounded border p-3">
+    <div class="mt-6 flex items-center gap-4">
+      <button type="submit" class="rounded-xl bg-red-600 px-5 py-3 font-bold text-white">Excluir definitivamente</button>
+      <a href="{% url 'accounts:painel' %}" class="text-slate-700 underline">Cancelar</a>
+    </div>
+  </form>
+</main>
+{% endblock %}

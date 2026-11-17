@@ -4,6 +4,8 @@ from .views import (
     CandidatarView,
     CandidataCurriculoView,
     EmpresaProfileUpdateView,
+    MeuSnapshotView,
+    MinhasCandidaturasView,
     MinhaVagaDetailView,
     MinhasVagasView,
     VagaCreateView,
@@ -22,6 +24,16 @@ urlpatterns = [
     path('minhas/', MinhasVagasView.as_view(), name='minhas'),
     path('minhas/nova/', VagaCreateView.as_view(), name='criar'),
     path('minhas/<int:pk>/', MinhaVagaDetailView.as_view(), name='minha_detalhe'),
+    path(
+        'minhas-candidaturas/',
+        MinhasCandidaturasView.as_view(),
+        name='minhas_candidaturas',
+    ),
+    path(
+        'minhas-candidaturas/<int:pk>/',
+        MeuSnapshotView.as_view(),
+        name='meu_snapshot',
+    ),
     path('minhas/<int:pk>/editar/', VagaUpdateView.as_view(), name='editar'),
     path('minhas/<int:pk>/excluir/', VagaDeleteView.as_view(), name='excluir'),
     path(

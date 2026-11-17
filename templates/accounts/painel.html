@@ -206,6 +206,7 @@
                                 <p class="mt-2 text-slate-600">Mantenha seu resumo, experiências e escolaridade atualizados.</p>
                                 <a href="{% url 'accounts:curriculo' %}" class="mt-4 inline-flex rounded-xl bg-violet-700 px-5 py-3 font-bold text-white">Meu currículo</a>
                                 <a href="{% url 'vagas:lista' %}" class="mt-4 ml-3 inline-flex rounded-xl border px-5 py-3 font-bold">Vagas</a>
+                                <a href="{% url 'accounts:excluir_conta' %}" class="mt-4 block text-sm font-semibold text-red-700 underline">Excluir minha conta</a>
                                 <form method="post" action="{% url 'accounts:logout' %}" class="mt-4 inline">
                                     {% csrf_token %}
                                     <button type="submit" class="rounded-xl border px-5 py-3 font-bold">Sair</button>
@@ -464,6 +465,7 @@
                     <p class="mt-2 text-slate-600">Atualize os dados institucionais e o logotipo da empresa.</p>
                     <a href="{% url 'vagas:empresa_editar' %}" class="mt-4 inline-flex rounded-xl bg-blue-950 px-5 py-3 font-bold text-white">Editar perfil da empresa</a>
                     <a href="{% url 'vagas:minhas' %}" class="mt-4 ml-3 inline-flex rounded-xl border px-5 py-3 font-bold">Minhas vagas</a>
+                    <a href="{% url 'accounts:excluir_conta' %}" class="mt-4 block text-sm font-semibold text-red-700 underline">Excluir minha conta</a>
                     <form method="post" action="{% url 'accounts:logout' %}" class="mt-4 inline">
                         {% csrf_token %}
                         <button type="submit" class="rounded-xl border px-5 py-3 font-bold">Sair</button>

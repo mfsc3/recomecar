@@ -13,6 +13,7 @@ from .views import (
     ExperienciaCreateView,
     ExperienciaDeleteView,
     ExperienciaUpdateView,
+    ExcluirContaView,
     PrivacidadeView,
     PainelView,
     PostOnlyLogoutView,
@@ -61,6 +62,7 @@ urlpatterns = [
         EscolaridadeDeleteView.as_view(),
         name='escolaridade_excluir',
     ),
+    path('conta/excluir/', ExcluirContaView.as_view(), name='excluir_conta'),
     path('termos/', TermosView.as_view(), name='termos'),
     path('privacidade/', PrivacidadeView.as_view(), name='privacidade'),
     path(

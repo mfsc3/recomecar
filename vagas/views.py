@@ -4,7 +4,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
@@ -200,4 +200,43 @@ class CandidataCurriculoView(EmpresaComPerfilMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['vaga'] = self.object.vaga
         context['snapshot'] = self.object.curriculo_snapshot or {}
+        context['back_url'] = reverse(
+            'vagas:minha_detalhe',
+            args=[self.object.vaga.pk],
+        )
+        return context
+
+
+class MinhasCandidaturasView(EgressaRequiredMixin, ListView):
+    model = Candidatura
+    template_name = 'vagas/minhas_candidaturas.html'
+    context_object_name = 'candidaturas'
+    paginate_by = 20
+
+    def get_queryset(self):
+        return (
+            Candidatura.objects
+            .filter(candidata=self.request.user)
+            .select_related('vaga', 'vaga__empresa')
+            .order_by('-data_candidatura')
+        )
+
+
+class MeuSnapshotView(EgressaRequiredMixin, DetailView):
+    model = Candidatura
+    template_name = 'vagas/candidata_curriculo.html'
+    context_object_name = 'candidatura'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Candidatura,
+            pk=self.kwargs['pk'],
+            candidata=self.request.user,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['vaga'] = self.object.vaga
+        context['snapshot'] = self.object.curriculo_snapshot or {}
+        context['back_url'] = reverse('vagas:minhas_candidaturas')
         return context

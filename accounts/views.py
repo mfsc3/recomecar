@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import logout as auth_logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.core.exceptions import ValidationError
@@ -37,6 +38,7 @@ from .forms import (
     ExperienciaForm,
 )
 from .mixins import EgressaRequiredMixin
+from .mixins import RoleRequiredMixin
 from .email_verification import enviar_confirmacao
 from .models import Curriculo, CustomUser, Escolaridade, Experiencia
 from .ratelimit import permitido
@@ -362,3 +364,36 @@ class EscolaridadeDeleteView(EgressaRequiredMixin, DeleteView):
             pk=self.kwargs['pk'],
             curriculo__user=self.request.user,
         )
+
+
+class ExcluirContaView(RoleRequiredMixin, TemplateView):
+    template_name = 'accounts/excluir_conta.html'
+    allowed_roles = (
+        CustomUser.Role.EGRESSA,
+        CustomUser.Role.EMPRESA,
+    )
+
+    def post(self, request, *args, **kwargs):
+        confirmacao = request.POST.get('confirmacao', '')
+        if confirmacao != 'EXCLUIR':
+            messages.error(
+                request,
+                'Digite EXCLUIR (exatamente, em maiúsculas) para confirmar a exclusão.',
+            )
+            return redirect('accounts:excluir_conta')
+
+        user_id = request.user.pk
+        try:
+            with transaction.atomic():
+                request.user.delete()
+        except Exception:
+            logger.exception('Falha ao excluir conta pk=%s', user_id)
+            messages.error(
+                request,
+                'Não foi possível excluir sua conta. Contate o suporte.',
+            )
+            return redirect('accounts:painel')
+
+        auth_logout(request)
+        messages.success(request, 'Sua conta e todos os dados foram apagados.')
+        return redirect('vagas:lista')

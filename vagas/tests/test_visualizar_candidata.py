@@ -111,3 +111,53 @@ class VisualizarCandidataTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Currículo não disponível')
+
+    def test_egressa_e_admin_bloqueados_em_candidata_curriculo(self):
+        admin = CustomUser.objects.create_superuser(
+            email='admin@example.com',
+            password='SenhaForte123!',
+        )
+        for user in (self.egressa, admin):
+            self.client.force_login(user)
+            self.assertEqual(
+                self.client.get(
+                    reverse(
+                        'vagas:candidata_curriculo',
+                        args=[self.vaga_a.pk, self.candidatura.pk],
+                    )
+                ).status_code,
+                403,
+            )
+
+    def test_empresa_sem_perfil_bloqueada_em_empresa_editar(self):
+        user = CustomUser.objects.create_user(
+            email='sem-perfil@example.com',
+            password='SenhaForte123!',
+            role=CustomUser.Role.EMPRESA,
+        )
+        self.client.force_login(user)
+        self.assertEqual(
+            self.client.get(reverse('vagas:empresa_editar')).status_code,
+            403,
+        )
+
+    def test_anonimo_redirecionado_em_candidata_curriculo(self):
+        response = self.client.get(
+            reverse(
+                'vagas:candidata_curriculo',
+                args=[self.vaga_a.pk, self.candidatura.pk],
+            )
+        )
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('/login/', response['Location'])
+
+    def test_admin_bloqueado_em_empresa_editar(self):
+        admin = CustomUser.objects.create_superuser(
+            email='admin-empresa@example.com',
+            password='SenhaForte123!',
+        )
+        self.client.force_login(admin)
+        self.assertEqual(
+            self.client.get(reverse('vagas:empresa_editar')).status_code,
+            403,
+        )
