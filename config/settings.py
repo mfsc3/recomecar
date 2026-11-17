@@ -165,7 +165,7 @@ LOGIN_REDIRECT_URL = 'accounts:painel'
 LOGOUT_REDIRECT_URL = 'accounts:login'
 
 EMAIL_BACKEND = (
-    'django.core.mail.backends.console.EmailBackend'
+    'accounts.dev_email.ReadableConsoleEmailBackend'
     if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
 )
 EMAIL_HOST = config('EMAIL_HOST', default='localhost')
