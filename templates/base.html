@@ -1,15 +1,86 @@
 <!-- Caminho: templates/base.html -->
 
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#6d28d9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
     <meta name="description" content="Recomeçar - Plataforma de oportunidades, talentos e inclusão profissional.">
 
     <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+
+    <style>
+        :root {
+            color-scheme: light;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overscroll-behavior-y: none;
+        }
+
+        body {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        button,
+        a,
+        input,
+        select,
+        textarea {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 3px solid rgba(124, 58, 237, 0.35);
+            outline-offset: 3px;
+        }
+
+        input[type="checkbox"],
+        input[type="radio"],
+        progress {
+            accent-color: #9333ea;
+        }
+
+        .pwa-fade-in {
+            animation: pwa-fade-in 320ms ease-out both;
+        }
+
+        @keyframes pwa-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 
     <title>{% block title %}Recomeçar{% endblock %}</title>
 </head>
@@ -23,11 +94,11 @@
     <header class="sticky top-0 z-50 border-b border-violet-100 bg-white shadow-sm">
 
         <nav aria-label="Navegação principal"
-             class="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-4 sm:px-6 lg:px-8">
+             class="select-none mx-auto flex w-full max-w-7xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-4 sm:px-6 lg:px-8">
 
             <!-- LOGO E IDENTIDADE -->
             <a href="{% url 'vagas:lista' %}"
-               class="group flex shrink-0 items-center gap-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-violet-100">
+               class="group flex shrink-0 items-center gap-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                 <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 transition group-hover:bg-violet-200">
 
@@ -66,7 +137,7 @@
 
                 <!-- VAGAS -->
                 <a href="{% url 'vagas:lista' %}"
-                   class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100">
+                   class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                     <svg xmlns="http://www.w3.org/2000/svg"
                          class="h-5 w-5 text-violet-600"
@@ -87,13 +158,18 @@
 
                 </a>
 
+                <a href="{% url 'vitrine:lista' %}"
+                   class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
+                    Vitrine
+                </a>
+
                 {% if request.user.is_authenticated %}
 
                     <!-- NAVEGAÇÃO DA EGRESSA -->
                     {% if request.user.role == 'EGRESSA' %}
 
                         <a href="{% url 'accounts:painel' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100">
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="h-5 w-5 text-violet-600"
@@ -116,11 +192,16 @@
 
                         </a>
 
+                        <a href="{% url 'vitrine:minha' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
+                            Minha vitrine
+                        </a>
+
                     <!-- NAVEGAÇÃO DA EMPRESA -->
                     {% elif request.user.role == 'EMPRESA' %}
 
                         <a href="{% url 'vagas:minhas' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="h-5 w-5 text-blue-800"
@@ -146,7 +227,7 @@
                         </a>
 
                         <a href="{% url 'accounts:painel' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="h-5 w-5 text-blue-800"
@@ -173,7 +254,7 @@
                     {% elif request.user.role == 'ADMIN' %}
 
                         <a href="{% url 'accounts:painel' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="h-5 w-5 text-blue-800"
@@ -197,7 +278,7 @@
                         </a>
 
                         <a href="{% url 'admin:index' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="h-5 w-5 text-blue-800"
@@ -228,7 +309,7 @@
                         {% csrf_token %}
 
                         <button type="submit"
-                                class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-slate-100 px-5 py-2 text-sm font-bold text-slate-700 transition hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-4 focus:ring-red-100 sm:w-auto">
+                                class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-slate-100 px-5 py-2 text-sm font-bold text-slate-700 transition hover:bg-red-50 hover:text-red-700 focus:outline-none focus:ring-4 focus:ring-red-100 sm:w-auto select-none transition-all duration-200 ease-in-out active:scale-95">
 
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  class="h-5 w-5"
@@ -257,7 +338,7 @@
                     <!-- NAVEGAÇÃO PARA VISITANTES -->
 
                     <a href="{% url 'accounts:login' %}"
-                       class="ml-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-700 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-200">
+                       class="ml-auto inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-700 px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-200 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                         <svg xmlns="http://www.w3.org/2000/svg"
                              class="h-5 w-5"
@@ -280,7 +361,7 @@
                     </a>
 
                     <a href="{% url 'accounts:cadastro_egressa' %}"
-                       class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-900 transition hover:bg-violet-100 focus:outline-none focus:ring-4 focus:ring-violet-100">
+                       class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-900 transition hover:bg-violet-100 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                         <svg xmlns="http://www.w3.org/2000/svg"
                              class="h-5 w-5"
@@ -302,7 +383,7 @@
                     </a>
 
                     <a href="{% url 'accounts:cadastro_empresa' %}"
-                       class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-950 transition hover:bg-blue-100 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                       class="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-950 transition hover:bg-blue-100 focus:outline-none focus:ring-4 focus:ring-blue-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
                         <svg xmlns="http://www.w3.org/2000/svg"
                              class="h-5 w-5"
@@ -345,7 +426,7 @@
 
                 {% for message in messages %}
 
-                    <li class="flex items-start gap-3 rounded-2xl border p-4 shadow-sm
+                    <li data-auto-dismiss class="flex items-start gap-3 rounded-2xl border p-4 shadow-sm
 
                         {% if message.tags == 'success' %}
                             border-green-200 bg-green-50 text-green-900
@@ -459,7 +540,7 @@
     <!-- ========================================== -->
 
     <main id="conteudo-principal"
-          class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+          class="pwa-fade-in mx-auto w-full max-w-7xl flex-1 px-4 pb-24 pt-8 sm:px-6 sm:py-10 lg:px-8">
 
         {% block content %}
 
@@ -534,9 +615,9 @@
 
             </div>
 
-            <nav aria-label="Documentos" class="flex gap-4 text-sm text-violet-700">
-                <a href="{% url 'accounts:termos' %}" class="hover:underline">Termos de Uso</a>
-                <a href="{% url 'accounts:privacidade' %}" class="hover:underline">Privacidade</a>
+            <nav aria-label="Documentos" class="select-none flex gap-4 text-sm text-violet-700">
+                <a href="{% url 'accounts:termos' %}" class="hover:underline select-none transition-all duration-200 ease-in-out active:scale-95">Termos de Uso</a>
+                <a href="{% url 'accounts:privacidade' %}" class="hover:underline select-none transition-all duration-200 ease-in-out active:scale-95">Privacidade</a>
             </nav>
 
         </div>
@@ -552,5 +633,73 @@
 
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var interactiveElements = document.querySelectorAll('a, button, [role="button"], nav, [role="tab"], [role="dialog"]');
+            interactiveElements.forEach(function (element) {
+                element.classList.add('select-none');
+            });
+
+            document.querySelectorAll('a, button').forEach(function (element) {
+                element.classList.add('transition-all', 'duration-200', 'ease-in-out');
+                if (!element.classList.contains('active:scale-95')) {
+                    element.classList.add('active:scale-95');
+                }
+            });
+
+            document.querySelectorAll('input[type="checkbox"], input[type="radio"], progress').forEach(function (element) {
+                element.classList.add('accent-purple-600');
+            });
+
+            document.querySelectorAll('form').forEach(function (form) {
+                form.classList.add('overscroll-contain');
+                form.querySelectorAll('input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="submit"]), select, textarea').forEach(function (field) {
+                    field.classList.add('min-h-12', 'w-full', 'rounded-xl', 'border', 'border-slate-300', 'bg-slate-50', 'px-4', 'py-3', 'text-base', 'text-slate-800', 'transition-all', 'duration-200', 'ease-in-out', 'focus:border-violet-500', 'focus:bg-white', 'focus:ring-4', 'focus:ring-violet-100');
+                });
+            });
+
+            document.querySelectorAll('form').forEach(function (form) {
+                form.addEventListener('submit', function () {
+                    var submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
+                    if (!submitButton || submitButton.disabled) {
+                        return;
+                    }
+
+                    submitButton.disabled = true;
+                    submitButton.classList.add('cursor-wait', 'opacity-75');
+                    submitButton.setAttribute('aria-busy', 'true');
+                });
+            });
+
+            document.querySelectorAll('input[type="file"]').forEach(function (input) {
+                input.addEventListener('change', function () {
+                    var file = input.files && input.files[0];
+                    if (!file || !file.type.startsWith('image/')) {
+                        return;
+                    }
+
+                    var preview = input.parentElement.querySelector('[data-image-preview]');
+                    if (!preview) {
+                        preview = document.createElement('img');
+                        preview.dataset.imagePreview = 'true';
+                        preview.alt = 'Pré-visualização da imagem selecionada';
+                        preview.className = 'mt-3 h-40 w-full rounded-2xl object-cover ring-1 ring-violet-100';
+                        input.parentElement.appendChild(preview);
+                    }
+
+                    preview.src = URL.createObjectURL(file);
+                });
+            });
+
+            document.querySelectorAll('[data-auto-dismiss]').forEach(function (notification) {
+                window.setTimeout(function () {
+                    notification.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+                    window.setTimeout(function () {
+                        notification.remove();
+                    }, 300);
+                }, 6000);
+            });
+        });
+    </script>
 </body>
 </html>
