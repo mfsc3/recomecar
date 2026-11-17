@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Excluir escolaridade | Recomeçar{% endblock %}
+{% block content %}
+<main class="mx-auto max-w-xl px-4 py-12">
+  <form method="post" class="rounded-2xl border bg-white p-6">
+    {% csrf_token %}
+    <h1 class="text-2xl font-bold">Excluir esta escolaridade?</h1>
+    <p class="my-4">{{ object.curso }} — {{ object.instituicao }}</p>
+    <button type="submit" class="rounded-lg bg-red-700 px-4 py-2 font-bold text-white">Excluir</button>
+  </form>
+</main>
+{% endblock %}

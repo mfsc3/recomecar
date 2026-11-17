@@ -201,6 +201,16 @@
                                 </svg>
 
                             </div>
+                            <div class="overflow-hidden rounded-2xl border border-violet-200 bg-white p-6 shadow-sm">
+                                <h3 class="text-xl font-bold text-slate-900">Meu currículo</h3>
+                                <p class="mt-2 text-slate-600">Mantenha seu resumo, experiências e escolaridade atualizados.</p>
+                                <a href="{% url 'accounts:curriculo' %}" class="mt-4 inline-flex rounded-xl bg-violet-700 px-5 py-3 font-bold text-white">Meu currículo</a>
+                                <a href="{% url 'vagas:lista' %}" class="mt-4 ml-3 inline-flex rounded-xl border px-5 py-3 font-bold">Vagas</a>
+                                <form method="post" action="{% url 'accounts:logout' %}" class="mt-4 inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="rounded-xl border px-5 py-3 font-bold">Sair</button>
+                                </form>
+                            </div>
 
                             <div>
                                 <h3 class="text-xl font-bold text-slate-900">
@@ -448,6 +458,16 @@
 
                     </div>
 
+                </div>
+                <div class="overflow-hidden rounded-2xl border border-blue-200 bg-white p-6 shadow-sm">
+                    <h3 class="text-xl font-bold text-slate-900">Perfil da empresa</h3>
+                    <p class="mt-2 text-slate-600">Atualize os dados institucionais e o logotipo da empresa.</p>
+                    <a href="{% url 'vagas:empresa_editar' %}" class="mt-4 inline-flex rounded-xl bg-blue-950 px-5 py-3 font-bold text-white">Editar perfil da empresa</a>
+                    <a href="{% url 'vagas:minhas' %}" class="mt-4 ml-3 inline-flex rounded-xl border px-5 py-3 font-bold">Minhas vagas</a>
+                    <form method="post" action="{% url 'accounts:logout' %}" class="mt-4 inline">
+                        {% csrf_token %}
+                        <button type="submit" class="rounded-xl border px-5 py-3 font-bold">Sair</button>
+                    </form>
                 </div>
 
                 <!-- Mensagem institucional -->

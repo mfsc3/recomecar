@@ -13,6 +13,7 @@ from django.urls import reverse
 from PIL import Image
 
 from allauth.account.models import EmailAddress
+from accounts.models import Curriculo
 from vagas.models import Candidatura, EmpresaProfile, Vaga
 from vitrine.models import ProdutoServico
 
@@ -159,6 +160,7 @@ class FluxoPontaAPontaTests(TestCase):
         self.confirm_signup(self.egressa_client, egressa_path)
         self.login(self.egressa_client, 'ana@example.com')
         candidate = User.objects.get(email='ana@example.com')
+        Curriculo.objects.create(user=candidate)
 
         application = self.egressa_client.post(
             reverse('vagas:candidatar', args=[vaga.pk]),

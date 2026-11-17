@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import (
     CandidatarView,
+    CandidataCurriculoView,
+    EmpresaProfileUpdateView,
     MinhaVagaDetailView,
     MinhasVagasView,
     VagaCreateView,
@@ -22,4 +24,14 @@ urlpatterns = [
     path('minhas/<int:pk>/', MinhaVagaDetailView.as_view(), name='minha_detalhe'),
     path('minhas/<int:pk>/editar/', VagaUpdateView.as_view(), name='editar'),
     path('minhas/<int:pk>/excluir/', VagaDeleteView.as_view(), name='excluir'),
+    path(
+        'minha-empresa/editar/',
+        EmpresaProfileUpdateView.as_view(),
+        name='empresa_editar',
+    ),
+    path(
+        'minhas/<int:vaga_pk>/candidaturas/<int:pk>/',
+        CandidataCurriculoView.as_view(),
+        name='candidata_curriculo',
+    ),
 ]

@@ -11,6 +11,7 @@ from django.utils import timezone
 from allauth.account.models import EmailAddress
 from allauth.core import context
 from allauth.socialaccount.models import SocialAccount, SocialLogin
+from accounts.models import Curriculo
 from allauth.socialaccount.internal.flows.signup import process_signup
 
 from vagas.models import Candidatura, EmpresaProfile, Vaga
@@ -107,6 +108,7 @@ class LgpdTests(TestCase):
             password='SenhaForte123!',
             role=User.Role.EGRESSA,
         )
+        Curriculo.objects.create(user=candidate)
         self.client.force_login(candidate)
         before = timezone.now()
         response = self.client.post(

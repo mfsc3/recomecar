@@ -6,10 +6,10 @@ from .models import Candidatura, EmpresaProfile, Vaga
 
 @admin.register(EmpresaProfile)
 class EmpresaProfileAdmin(admin.ModelAdmin):
-    list_display = ('razao_social', 'cnpj', 'user', 'is_aprovada', 'usuario_ativo')
-    list_filter = ('is_aprovada', 'user__is_active')
+    list_display = ('razao_social', 'nome_fantasia', 'cnpj', 'user', 'is_aprovada', 'usuario_ativo')
+    list_filter = ('is_aprovada', 'estado', 'user__is_active')
     ordering = ('is_aprovada', 'razao_social')
-    search_fields = ('razao_social', 'cnpj', 'user__email')
+    search_fields = ('razao_social', 'nome_fantasia', 'cnpj', 'user__email')
     raw_id_fields = ('user',)
     list_select_related = ('user',)
     actions = ('aprovar_empresas', 'revogar_aprovacao')
@@ -59,6 +59,7 @@ class CandidaturaAdmin(admin.ModelAdmin):
     list_select_related = ('candidata', 'vaga')
     readonly_fields = (
         'vaga', 'candidata', 'data_candidatura', 'aceitou_compartilhar_em',
+        'curriculo_snapshot',
     )
 
     def has_add_permission(self, request):

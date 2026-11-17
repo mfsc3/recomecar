@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Excluir experiência | Recomeçar{% endblock %}
+{% block content %}
+<main class="mx-auto max-w-xl px-4 py-12">
+  <form method="post" class="rounded-2xl border bg-white p-6">
+    {% csrf_token %}
+    <h1 class="text-2xl font-bold">Excluir esta experiência?</h1>
+    <p class="my-4">{{ object.cargo }} — {{ object.empresa_nome }}</p>
+    <button type="submit" class="rounded-lg bg-red-700 px-4 py-2 font-bold text-white">Excluir</button>
+  </form>
+</main>
+{% endblock %}
