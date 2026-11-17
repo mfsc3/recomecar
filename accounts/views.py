@@ -7,11 +7,17 @@ from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
 from django.http import HttpResponseNotAllowed
-from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.html import format_html
-from django.views.generic import FormView, TemplateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    FormView,
+    TemplateView,
+    UpdateView,
+)
 
 from allauth.account.internal.flows.email_verification import (
     send_verification_email_to_address,
@@ -26,9 +32,13 @@ from .forms import (
     CadastroEgressaForm,
     EmailLoginForm,
     EmailReenvioForm,
+    CurriculoForm,
+    EscolaridadeForm,
+    ExperienciaForm,
 )
+from .mixins import EgressaRequiredMixin
 from .email_verification import enviar_confirmacao
-from .models import CustomUser
+from .models import Curriculo, CustomUser, Escolaridade, Experiencia
 from .ratelimit import permitido
 
 
@@ -222,3 +232,133 @@ class TermosView(TemplateView):
 
 class PrivacidadeView(TemplateView):
     template_name = 'accounts/privacidade.html'
+
+
+class CurriculoDetailView(EgressaRequiredMixin, TemplateView):
+    template_name = 'accounts/curriculo_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        curriculo, _ = Curriculo.objects.get_or_create(user=self.request.user)
+        context['curriculo'] = curriculo
+        context['experiencias'] = curriculo.experiencias.all()
+        context['escolaridades'] = curriculo.escolaridades.all()
+        return context
+
+
+class CurriculoUpdateView(EgressaRequiredMixin, UpdateView):
+    model = Curriculo
+    form_class = CurriculoForm
+    template_name = 'accounts/curriculo_form.html'
+    success_url = reverse_lazy('accounts:curriculo')
+
+    def get_object(self, queryset=None):
+        curriculo, _ = Curriculo.objects.get_or_create(user=self.request.user)
+        return curriculo
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Currículo atualizado.')
+        return response
+
+
+class ExperienciaCreateView(EgressaRequiredMixin, CreateView):
+    model = Experiencia
+    form_class = ExperienciaForm
+    template_name = 'accounts/experiencia_form.html'
+    success_url = reverse_lazy('accounts:curriculo')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.curriculo_atual, _ = Curriculo.objects.get_or_create(
+            user=request.user
+        )
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.curriculo = self.curriculo_atual
+        response = super().form_valid(form)
+        messages.success(self.request, 'Experiência adicionada.')
+        return response
+
+
+class ExperienciaUpdateView(EgressaRequiredMixin, UpdateView):
+    model = Experiencia
+    form_class = ExperienciaForm
+    template_name = 'accounts/experiencia_form.html'
+    success_url = reverse_lazy('accounts:curriculo')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Experiencia,
+            pk=self.kwargs['pk'],
+            curriculo__user=self.request.user,
+        )
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Experiência atualizada.')
+        return response
+
+
+class ExperienciaDeleteView(EgressaRequiredMixin, DeleteView):
+    model = Experiencia
+    template_name = 'accounts/experiencia_confirm_delete.html'
+    success_url = reverse_lazy('accounts:curriculo')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Experiencia,
+            pk=self.kwargs['pk'],
+            curriculo__user=self.request.user,
+        )
+
+
+class EscolaridadeCreateView(EgressaRequiredMixin, CreateView):
+    model = Escolaridade
+    form_class = EscolaridadeForm
+    template_name = 'accounts/escolaridade_form.html'
+    success_url = reverse_lazy('accounts:curriculo')
+
+    def dispatch(self, request, *args, **kwargs):
+        self.curriculo_atual, _ = Curriculo.objects.get_or_create(
+            user=request.user
+        )
+        return super().dispatch(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        form.instance.curriculo = self.curriculo_atual
+        response = super().form_valid(form)
+        messages.success(self.request, 'Escolaridade adicionada.')
+        return response
+
+
+class EscolaridadeUpdateView(EgressaRequiredMixin, UpdateView):
+    model = Escolaridade
+    form_class = EscolaridadeForm
+    template_name = 'accounts/escolaridade_form.html'
+    success_url = reverse_lazy('accounts:curriculo')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Escolaridade,
+            pk=self.kwargs['pk'],
+            curriculo__user=self.request.user,
+        )
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Escolaridade atualizada.')
+        return response
+
+
+class EscolaridadeDeleteView(EgressaRequiredMixin, DeleteView):
+    model = Escolaridade
+    template_name = 'accounts/escolaridade_confirm_delete.html'
+    success_url = reverse_lazy('accounts:curriculo')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Escolaridade,
+            pk=self.kwargs['pk'],
+            curriculo__user=self.request.user,
+        )

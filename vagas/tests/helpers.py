@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from accounts.models import CustomUser
+from accounts.models import Curriculo, CustomUser
 from vagas.models import EmpresaProfile, Vaga
 
 
@@ -29,8 +29,10 @@ class VagaTestCase(TestCase):
         )
 
     def create_egressa(self, email='egressa@example.com'):
-        return CustomUser.objects.create_user(
+        user = CustomUser.objects.create_user(
             email=email,
             password='SenhaForte123!',
             role=CustomUser.Role.EGRESSA,
         )
+        Curriculo.objects.create(user=user)
+        return user

@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import CustomUser
+from .models import Curriculo, CustomUser, Escolaridade, Experiencia
 
 
 @admin.register(CustomUser)
@@ -36,3 +36,25 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
     readonly_fields = ('aceitou_termo_em', 'versao_termo')
+
+
+@admin.register(Curriculo)
+class CurriculoAdmin(admin.ModelAdmin):
+    list_display = ('user', 'atualizado_em')
+    search_fields = ('user__email',)
+    raw_id_fields = ('user',)
+    readonly_fields = ('criado_em', 'atualizado_em')
+
+
+@admin.register(Experiencia)
+class ExperienciaAdmin(admin.ModelAdmin):
+    list_display = ('cargo', 'empresa_nome', 'curriculo', 'data_inicio', 'data_fim')
+    search_fields = ('empresa_nome', 'cargo', 'curriculo__user__email')
+    raw_id_fields = ('curriculo',)
+
+
+@admin.register(Escolaridade)
+class EscolaridadeAdmin(admin.ModelAdmin):
+    list_display = ('curso', 'instituicao', 'nivel', 'status', 'curriculo')
+    search_fields = ('instituicao', 'curso', 'curriculo__user__email')
+    raw_id_fields = ('curriculo',)

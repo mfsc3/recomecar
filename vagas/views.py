@@ -10,9 +10,10 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from accounts.mixins import EgressaRequiredMixin
 from accounts.models import CustomUser
+from accounts.services import snapshot_curriculo
 
-from .forms import VagaForm
-from .models import Candidatura, Vaga
+from .forms import EmpresaProfileForm, VagaForm
+from .models import Candidatura, EmpresaProfile, Vaga
 from .permissions import EmpresaAprovadaRequiredMixin, EmpresaComPerfilMixin
 
 
@@ -61,12 +62,20 @@ class CandidatarView(EgressaRequiredMixin, View):
             ativa=True,
             empresa__is_aprovada=True,
         )
+        curriculo = getattr(request.user, 'curriculo', None)
+        if curriculo is None:
+            messages.warning(
+                request,
+                'Antes de se candidatar, preencha seu currículo para que a empresa possa conhecer você.',
+            )
+            return redirect('accounts:curriculo')
         try:
             with transaction.atomic():
                 Candidatura.objects.create(
                     vaga=vaga,
                     candidata=request.user,
                     aceitou_compartilhar_em=timezone.now(),
+                    curriculo_snapshot=snapshot_curriculo(curriculo),
                 )
         except (ValidationError, IntegrityError):
             messages.info(request, 'Você já se candidatou a esta vaga.')
@@ -157,3 +166,38 @@ class VagaDeleteView(EmpresaComPerfilMixin, DeleteView):
         response = super().form_valid(form)
         messages.success(self.request, 'Vaga excluída com sucesso.')
         return response
+
+
+class EmpresaProfileUpdateView(EmpresaComPerfilMixin, UpdateView):
+    model = EmpresaProfile
+    form_class = EmpresaProfileForm
+    template_name = 'vagas/empresa_perfil_form.html'
+    success_url = reverse_lazy('accounts:painel')
+
+    def get_object(self, queryset=None):
+        return self.request.user.empresa_profile
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Perfil atualizado.')
+        return response
+
+
+class CandidataCurriculoView(EmpresaComPerfilMixin, DetailView):
+    model = Candidatura
+    template_name = 'vagas/candidata_curriculo.html'
+    context_object_name = 'candidatura'
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(
+            Candidatura,
+            pk=self.kwargs['pk'],
+            vaga__pk=self.kwargs['vaga_pk'],
+            vaga__empresa=self.empresa,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['vaga'] = self.object.vaga
+        context['snapshot'] = self.object.curriculo_snapshot or {}
+        return context

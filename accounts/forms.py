@@ -4,7 +4,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCr
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import CustomUser
+from .models import Curriculo, CustomUser, Escolaridade, Experiencia
 from vagas.models import EmpresaProfile
 from vagas.validators import validar_cnpj
 
@@ -78,3 +78,40 @@ class EmailReenvioForm(forms.Form):
 
     def clean_email(self):
         return self.cleaned_data['email'].strip().lower()
+
+
+class CurriculoForm(forms.ModelForm):
+    class Meta:
+        model = Curriculo
+        fields = ('resumo', 'habilidades')
+        widgets = {
+            'resumo': forms.Textarea(attrs={'class': 'w-full rounded border p-3', 'rows': 5}),
+            'habilidades': forms.Textarea(attrs={'class': 'w-full rounded border p-3', 'rows': 4}),
+        }
+
+
+class ExperienciaForm(forms.ModelForm):
+    class Meta:
+        model = Experiencia
+        fields = ('empresa_nome', 'cargo', 'data_inicio', 'data_fim', 'descricao')
+        widgets = {
+            'empresa_nome': forms.TextInput(attrs={'class': 'w-full rounded border p-2'}),
+            'cargo': forms.TextInput(attrs={'class': 'w-full rounded border p-2'}),
+            'data_inicio': forms.DateInput(attrs={'type': 'date', 'class': 'w-full rounded border p-2'}),
+            'data_fim': forms.DateInput(attrs={'type': 'date', 'class': 'w-full rounded border p-2'}),
+            'descricao': forms.Textarea(attrs={'class': 'w-full rounded border p-3', 'rows': 4}),
+        }
+
+
+class EscolaridadeForm(forms.ModelForm):
+    class Meta:
+        model = Escolaridade
+        fields = ('instituicao', 'curso', 'nivel', 'status', 'ano_inicio', 'ano_conclusao')
+        widgets = {
+            'instituicao': forms.TextInput(attrs={'class': 'w-full rounded border p-2'}),
+            'curso': forms.TextInput(attrs={'class': 'w-full rounded border p-2'}),
+            'nivel': forms.Select(attrs={'class': 'w-full rounded border p-2'}),
+            'status': forms.Select(attrs={'class': 'w-full rounded border p-2'}),
+            'ano_inicio': forms.NumberInput(attrs={'class': 'w-full rounded border p-2'}),
+            'ano_conclusao': forms.NumberInput(attrs={'class': 'w-full rounded border p-2'}),
+        }

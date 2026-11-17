@@ -196,6 +196,10 @@
                            class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
                             Minha vitrine
                         </a>
+                        <a href="{% url 'accounts:curriculo' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800">
+                            Meu currículo
+                        </a>
 
                     <!-- NAVEGAÇÃO DA EMPRESA -->
                     {% elif request.user.role == 'EMPRESA' %}
@@ -224,6 +228,10 @@
 
                             Minhas vagas
 
+                        </a>
+                        <a href="{% url 'vagas:empresa_editar' %}"
+                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900">
+                            Editar perfil da empresa
                         </a>
 
                         <a href="{% url 'accounts:painel' %}"

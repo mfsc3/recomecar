@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Meu currículo | Recomeçar{% endblock %}
+{% block content %}
+<main class="mx-auto max-w-5xl px-4 py-8">
+  <div class="mb-6 flex items-center justify-between">
+    <h1 class="text-3xl font-bold text-slate-900">Meu currículo</h1>
+    <a href="{% url 'accounts:curriculo_editar' %}" class="rounded-xl bg-violet-700 px-4 py-3 font-bold text-white">Editar currículo</a>
+  </div>
+  <section class="mb-6 rounded-2xl border bg-white p-6">
+    <h2 class="text-xl font-bold">Resumo profissional</h2>
+    <div class="mt-3 text-slate-700">{{ curriculo.resumo|default:"Não informado"|linebreaks }}</div>
+    <h2 class="mt-6 text-xl font-bold">Habilidades</h2>
+    <div class="mt-3 text-slate-700">{{ curriculo.habilidades|default:"Não informadas"|linebreaks }}</div>
+  </section>
+  <section class="mb-6 rounded-2xl border bg-white p-6">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-xl font-bold">Experiências</h2>
+      <a href="{% url 'accounts:experiencia_nova' %}" class="rounded-lg border px-3 py-2 font-semibold">Adicionar</a>
+    </div>
+    {% for experiencia in experiencias %}
+      <article class="mb-4 border-b pb-4">
+        <h3 class="font-bold">{{ experiencia.cargo }} — {{ experiencia.empresa_nome }}</h3>
+        <p class="text-sm text-slate-600">{{ experiencia.data_inicio }}{% if experiencia.data_fim %} a {{ experiencia.data_fim }}{% else %} — atual{% endif %}</p>
+        <div class="mt-2">{{ experiencia.descricao|linebreaks }}</div>
+        <a href="{% url 'accounts:experiencia_editar' experiencia.pk %}" class="mr-3 text-violet-700">Editar</a>
+        <a href="{% url 'accounts:experiencia_excluir' experiencia.pk %}" class="text-red-700">Excluir</a>
+      </article>
+    {% empty %}
+      <p>Nenhuma experiência cadastrada.</p>
+    {% endfor %}
+  </section>
+  <section class="rounded-2xl border bg-white p-6">
+    <div class="mb-4 flex items-center justify-between">
+      <h2 class="text-xl font-bold">Escolaridade</h2>
+      <a href="{% url 'accounts:escolaridade_nova' %}" class="rounded-lg border px-3 py-2 font-semibold">Adicionar</a>
+    </div>
+    {% for escolaridade in escolaridades %}
+      <article class="mb-4 border-b pb-4">
+        <h3 class="font-bold">{{ escolaridade.curso }} — {{ escolaridade.instituicao }}</h3>
+        <p class="text-sm text-slate-600">{{ escolaridade.get_nivel_display }} — {{ escolaridade.get_status_display }}</p>
+        <a href="{% url 'accounts:escolaridade_editar' escolaridade.pk %}" class="mr-3 text-violet-700">Editar</a>
+        <a href="{% url 'accounts:escolaridade_excluir' escolaridade.pk %}" class="text-red-700">Excluir</a>
+      </article>
+    {% empty %}
+      <p>Nenhuma escolaridade cadastrada.</p>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}
