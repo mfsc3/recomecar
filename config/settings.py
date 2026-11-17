@@ -196,6 +196,32 @@ VITRINE_IMAGEM_MAX_BYTES = 2 * 1024 * 1024
 VITRINE_IMAGEM_MAX_PIXELS = 16_000_000
 VITRINE_IMAGEM_LADO_MAX = 1600
 VITRINE_MAX_ITENS = 20
+
+from django.core.exceptions import ImproperlyConfigured
+
+
+def _validate_storage_backend(*, debug, storage_backend, is_test):
+    """
+    Guard fail-loud: em produção (DEBUG=False) e fora de testes, o backend
+    default de storage NÃO pode ser FileSystemStorage — senão logos e mídias
+    são apagados a cada redeploy (disco efêmero do Render/Railway).
+
+    Função pura (sem efeitos colaterais) para permitir teste unitário sem
+    reload do módulo de settings.
+
+    Referência: Mini-Sprint 8.1 (guarda de R2 em produção).
+    """
+    if is_test or debug:
+        return
+    if storage_backend.endswith('FileSystemStorage'):
+        raise ImproperlyConfigured(
+            'R2 não configurado em produção. Defina R2_BUCKET_NAME, '
+            'R2_ENDPOINT_URL, R2_ACCESS_KEY_ID e R2_SECRET_ACCESS_KEY no '
+            '.env antes de rodar com DEBUG=False. '
+            'Ver Mini-Sprint 8.1 (guard fail-loud de storage).'
+        )
+
+
 STORAGES = {
     'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
     'staticfiles': {
@@ -223,6 +249,12 @@ if R2_BUCKET_NAME.strip():
             'default_acl': None,
         },
     }
+
+_validate_storage_backend(
+    debug=DEBUG,
+    storage_backend=STORAGES['default']['BACKEND'],
+    is_test='test' in sys.argv,
+)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
