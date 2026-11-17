@@ -1,17 +1,52 @@
 # config/settings.py
 from pathlib import Path
+import os
 import sys
 from datetime import timedelta
 
 import dj_database_url
 from decouple import Csv, config
+from django.core.exceptions import ImproperlyConfigured
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
+PRODUCAO = not DEBUG and 'test' not in sys.argv
+
+
+def exigir(nome):
+    valor = config(nome, default='')
+    if PRODUCAO and not str(valor).strip():
+        raise ImproperlyConfigured(
+            f'Variável de ambiente obrigatória ausente em produção: {nome}'
+        )
+    return valor
+
+
+if PRODUCAO and (
+    len(SECRET_KEY) < 50 or SECRET_KEY.startswith('django-insecure')
+):
+    raise ImproperlyConfigured(
+        'SECRET_KEY de produção deve ter pelo menos 50 caracteres.'
+    )
+
+
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='', cast=Csv())
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME', '').strip()
+if RENDER_EXTERNAL_HOSTNAME and RENDER_EXTERNAL_HOSTNAME not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+CSRF_TRUSTED_ORIGINS = config(
+    'CSRF_TRUSTED_ORIGINS',
+    default='',
+    cast=Csv(),
+)
+if RENDER_EXTERNAL_HOSTNAME:
+    render_origin = f'https://{RENDER_EXTERNAL_HOSTNAME}'
+    if render_origin not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(render_origin)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,22 +103,17 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+DATABASE_URL = config('DATABASE_URL')
 DATABASES = {
     'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
+        default=DATABASE_URL,
         conn_max_age=60,
         conn_health_checks=True,
+        ssl_require=PRODUCAO and DATABASE_URL.startswith(
+            ('postgres://', 'postgresql://')
+        ),
     ),
 }
-
-if 'test' in sys.argv:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': ':memory:',
-        }
-    }
-    PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
 PASSWORD_RESET_TIMEOUT = 3600
 
@@ -110,8 +140,19 @@ SOCIALACCOUNT_STORE_TOKENS = False
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': config('GOOGLE_CLIENT_ID', default='fictitious-client-id'),
-            'secret': config('GOOGLE_CLIENT_SECRET', default='fictitious-client-secret'),
+            'client_id': (
+                exigir('GOOGLE_CLIENT_ID')
+                if PRODUCAO
+                else config('GOOGLE_CLIENT_ID', default='fictitious-client-id')
+            ),
+            'secret': (
+                exigir('GOOGLE_CLIENT_SECRET')
+                if PRODUCAO
+                else config(
+                    'GOOGLE_CLIENT_SECRET',
+                    default='fictitious-client-secret',
+                )
+            ),
         },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'},
@@ -121,13 +162,14 @@ SOCIALACCOUNT_PROVIDERS = {
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = timedelta(minutes=15)
 AXES_LOCKOUT_PARAMETERS = [['ip_address', 'username']]
+AXES_HANDLER = 'axes.handlers.database.AxesDatabaseHandler'
 AXES_USERNAME_FORM_FIELD = 'username'
 AXES_RESET_ON_SUCCESS = True
 AXES_LOCKOUT_TEMPLATE = 'accounts/lockout.html'
 AXES_HTTP_RESPONSE_CODE = 403
 AXES_IPWARE_PROXY_COUNT = config('AXES_IPWARE_PROXY_COUNT', default=0, cast=int)
 
-TERMOS_VERSAO = 'rascunho-2026-11'
+TERMOS_VERSAO = config('TERMOS_VERSAO', default='rascunho-2026-11')
 RATE_LIMIT_IP = (5, 3600)
 RATE_LIMIT_EMAIL = (3, 3600)
 
@@ -158,11 +200,38 @@ STORAGES = {
     },
 }
 
+R2_BUCKET_NAME = exigir('R2_BUCKET_NAME')
+R2_ENDPOINT_URL = exigir('R2_ENDPOINT_URL')
+R2_ACCESS_KEY_ID = exigir('R2_ACCESS_KEY_ID')
+R2_SECRET_ACCESS_KEY = exigir('R2_SECRET_ACCESS_KEY')
+if R2_BUCKET_NAME.strip():
+    STORAGES['default'] = {
+        'BACKEND': 'storages.backends.s3.S3Storage',
+        'OPTIONS': {
+            'bucket_name': R2_BUCKET_NAME,
+            'endpoint_url': R2_ENDPOINT_URL,
+            'access_key': R2_ACCESS_KEY_ID,
+            'secret_key': R2_SECRET_ACCESS_KEY,
+            'region_name': 'auto',
+            'signature_version': 's3v4',
+            'querystring_auth': True,
+            'querystring_expire': 3600,
+            'file_overwrite': False,
+            'default_acl': None,
+        },
+    }
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:painel'
 LOGOUT_REDIRECT_URL = 'accounts:login'
+
+ADMIN_URL = config('ADMIN_URL', default='admin/')
+if not ADMIN_URL.endswith('/') or ADMIN_URL.startswith('/'):
+    raise ImproperlyConfigured(
+        'ADMIN_URL deve terminar com "/" e não pode começar com "/".'
+    )
 
 EMAIL_BACKEND = (
     'accounts.dev_email.ReadableConsoleEmailBackend'
@@ -170,28 +239,73 @@ EMAIL_BACKEND = (
 )
 EMAIL_HOST = config('EMAIL_HOST', default='localhost')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
+EMAIL_HOST_USER = (
+    exigir('EMAIL_HOST_USER')
+    if PRODUCAO
+    else config('EMAIL_HOST_USER', default='')
+)
+EMAIL_HOST_PASSWORD = (
+    exigir('EMAIL_HOST_PASSWORD')
+    if PRODUCAO
+    else config('EMAIL_HOST_PASSWORD', default='')
+)
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
-DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='no-reply@recomecar.local')
+EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
+DEFAULT_FROM_EMAIL = (
+    exigir('DEFAULT_FROM_EMAIL')
+    if PRODUCAO
+    else config('DEFAULT_FROM_EMAIL', default='no-reply@recomecar.local')
+)
 
-if not DEBUG:
+if PRODUCAO:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_REDIRECT_EXEMPT = [r'^saude/$']
+    SECURE_HSTS_SECONDS = config('SECURE_HSTS_SECONDS', default=3600, cast=int)
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-    CSRF_TRUSTED_ORIGINS = config(
-        'CSRF_TRUSTED_ORIGINS',
-        default='',
-        cast=Csv(),
-    )
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+            'LOCATION': 'django_cache',
+            'OPTIONS': {'MAX_ENTRIES': 5000},
+        }
+    }
+else:
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'http'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {'console': {'class': 'logging.StreamHandler'}},
+    'loggers': {
+        'django': {'handlers': ['console'], 'level': 'INFO'},
+        'django.request': {'handlers': ['console'], 'level': 'ERROR', 'propagate': False},
+    },
+}
 
 if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+        }
+    }
+    PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
     STORAGES = {
         'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
         'staticfiles': {
             'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
         },
+    }
+    SECURE_SSL_REDIRECT = False
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        }
     }

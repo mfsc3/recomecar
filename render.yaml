@@ -1,0 +1,36 @@
+services:
+  - type: web
+    name: recomecar
+    runtime: python
+    plan: free
+    region: virginia
+    branch: main
+    buildCommand: bash build.sh
+    startCommand: gunicorn config.wsgi:application --workers 2 --timeout 60 --access-logfile -
+    healthCheckPath: /saude/
+    autoDeployTrigger: "off"
+    envVars:
+      - {key: PYTHON_VERSION, value: 3.13.5}
+      - {key: DEBUG, value: "False"}
+      - {key: SECRET_KEY, generateValue: true}
+      - {key: DATABASE_URL, sync: false}
+      - {key: SITE_DOMAIN, sync: false}
+      - {key: ADMIN_URL, sync: false}
+      - {key: ADMIN_EMAIL, sync: false}
+      - {key: ADMIN_INITIAL_PASSWORD, sync: false}
+      - {key: GOOGLE_CLIENT_ID, sync: false}
+      - {key: GOOGLE_CLIENT_SECRET, sync: false}
+      - {key: EMAIL_HOST, value: smtp-relay.brevo.com}
+      - {key: EMAIL_PORT, value: "2525"}
+      - {key: EMAIL_USE_TLS, value: "True"}
+      - {key: EMAIL_TIMEOUT, value: "10"}
+      - {key: EMAIL_HOST_USER, sync: false}
+      - {key: EMAIL_HOST_PASSWORD, sync: false}
+      - {key: DEFAULT_FROM_EMAIL, sync: false}
+      - {key: R2_BUCKET_NAME, sync: false}
+      - {key: R2_ENDPOINT_URL, sync: false}
+      - {key: R2_ACCESS_KEY_ID, sync: false}
+      - {key: R2_SECRET_ACCESS_KEY, sync: false}
+      - {key: AXES_IPWARE_PROXY_COUNT, value: "1"}
+      - {key: SECURE_HSTS_SECONDS, value: "3600"}
+      - {key: TERMOS_VERSAO, sync: false}
