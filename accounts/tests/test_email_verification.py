@@ -149,8 +149,99 @@ class EmailVerificationTests(TestCase):
             user.refresh_from_db()
             self.assertFalse(user.is_active)
 
-    @patch(
-        'accounts.email_verification.send_verification_email_to_address',
+    def test_confirmacao_ativa_user(self):
+        user = User.objects.create_user(
+            email='ana@example.com',
+            password='SenhaForte123!',
+            role=User.Role.EGRESSA,
+            is_active=False,
+        )
+        address = EmailAddress.objects.create(
+            user=user,
+            email=user.email,
+            primary=True,
+            verified=True,
+        )
+        from allauth.account import signals
+        signals.email_confirmed.send(
+            sender=EmailAddress,
+            request=None,
+            email_address=address,
+        )
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
+
+    def test_confirmacao_de_outro_email_nao_ativa(self):
+        user = User.objects.create_user(
+            email='ana@example.com',
+            password='SenhaForte123!',
+            role=User.Role.EGRESSA,
+            is_active=False,
+        )
+        address = EmailAddress.objects.create(
+            user=user,
+            email='outro@example.com',
+            primary=False,
+            verified=True,
+        )
+        from allauth.account import signals
+        signals.email_confirmed.send(
+            sender=EmailAddress,
+            request=None,
+            email_address=address,
+        )
+        user.refresh_from_db()
+        self.assertFalse(user.is_active)
+
+    def test_confirmacao_de_email_nao_verificado_nao_ativa(self):
+        user = User.objects.create_user(
+            email='ana@example.com',
+            password='SenhaForte123!',
+            role=User.Role.EGRESSA,
+            is_active=False,
+        )
+        address = EmailAddress.objects.create(
+            user=user,
+            email=user.email,
+            primary=True,
+            verified=False,
+        )
+        from allauth.account import signals
+        signals.email_confirmed.send(
+            sender=EmailAddress,
+            request=None,
+            email_address=address,
+        )
+        user.refresh_from_db()
+        self.assertFalse(user.is_active)
+
+    def test_user_ja_ativo_nao_e_tocado(self):
+        user = User.objects.create_user(
+            email='ana@example.com',
+            password='SenhaForte123!',
+            role=User.Role.EGRESSA,
+            is_active=True,
+        )
+        address = EmailAddress.objects.create(
+            user=user,
+            email=user.email,
+            primary=True,
+            verified=True,
+        )
+        before = user.last_login
+        from allauth.account import signals
+        signals.email_confirmed.send(
+            sender=EmailAddress,
+            request=None,
+            email_address=address,
+        )
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
+        self.assertEqual(user.last_login, before)
+
+    @patch.object(
+        EmailAddress,
+        'send_confirmation',
         side_effect=RuntimeError('mail unavailable'),
     )
     def test_email_failure_keeps_created_user_and_returns_warning(self, _send):

@@ -6,6 +6,8 @@ from django.core import mail
 from django.core.cache import cache
 from django.test import TestCase
 
+from allauth.account.models import EmailAddress
+
 
 class MensagensTests(TestCase):
     def setUp(self):
@@ -39,8 +41,9 @@ class MensagensTests(TestCase):
             r'<li[^>]*data-auto-dismiss[^>]*>',
         )
 
-    @patch(
-        'accounts.email_verification.send_verification_email_to_address',
+    @patch.object(
+        EmailAddress,
+        'send_confirmation',
         side_effect=RuntimeError('mail unavailable'),
     )
     def test_aviso_de_falha_nao_tem_auto_dismiss(self, _send):
@@ -51,8 +54,7 @@ class MensagensTests(TestCase):
         )
         html = response.content.decode()
 
-        self.assertContains(response, 'não foi possível enviar o e-mail')
-        self.assertContains(response, 'href="/email/reenviar/"')
+        self.assertContains(response, 'não conseguimos enviar o e-mail')
         self.assertEqual(
             re.findall(r'<li[^>]*data-auto-dismiss[^>]*>', html),
             [],
