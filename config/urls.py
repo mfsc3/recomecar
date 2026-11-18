@@ -23,6 +23,7 @@ from django.views.generic import RedirectView
 from .health import saude
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='/login/', permanent=False)),
     path('saude/', saude, name='saude'),
     path(settings.ADMIN_URL, admin.site.urls),
     path('accounts/login/', RedirectView.as_view(
