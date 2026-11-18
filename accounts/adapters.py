@@ -43,8 +43,24 @@ class CustomSocialAccountAdapter(DefaultSocialAccountAdapter):
         ]
         if not verified_emails:
             self._bloquear(request)
-        if CustomUser.objects.filter(email__iexact=verified_emails[0]).exists():
+            return
+
+        email = verified_emails[0]
+        existing = CustomUser.objects.filter(email__iexact=email).first()
+        if existing is None:
+            return
+
+        from allauth.account.models import EmailAddress
+        email_verified = EmailAddress.objects.filter(
+            user=existing,
+            verified=True,
+            email__iexact=email,
+        ).exists()
+        if not email_verified:
             self._bloquear(request)
+            return
+
+        sociallogin.connect(request, existing)
 
     def _force_egressa(self, user, email=None):
         user.role = CustomUser.Role.EGRESSA

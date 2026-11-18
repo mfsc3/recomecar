@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'axes',
-    'accounts',
+    'accounts.apps.AccountsConfig',
     'vagas',
     'vitrine',
 ]
@@ -268,28 +268,20 @@ if not ADMIN_URL.endswith('/') or ADMIN_URL.startswith('/'):
         'ADMIN_URL deve terminar com "/" e não pode começar com "/".'
     )
 
-EMAIL_BACKEND = (
-    'accounts.dev_email.ReadableConsoleEmailBackend'
-    if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
-)
-EMAIL_HOST = config('EMAIL_HOST', default='localhost')
-EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_HOST_USER = (
-    exigir('EMAIL_HOST_USER')
-    if PRODUCAO
-    else config('EMAIL_HOST_USER', default='')
-)
-EMAIL_HOST_PASSWORD = (
-    exigir('EMAIL_HOST_PASSWORD')
-    if PRODUCAO
-    else config('EMAIL_HOST_PASSWORD', default='')
-)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = config('EMAIL_HOST', default='smtp-relay.brevo.com')
+    EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
+    EMAIL_USE_TLS = config('EMAIL_USE_TLS', default=True, cast=bool)
+    EMAIL_HOST_USER = exigir('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = exigir('EMAIL_HOST_PASSWORD')
+
 EMAIL_TIMEOUT = config('EMAIL_TIMEOUT', default=10, cast=int)
-DEFAULT_FROM_EMAIL = (
-    exigir('DEFAULT_FROM_EMAIL')
-    if PRODUCAO
-    else config('DEFAULT_FROM_EMAIL', default='no-reply@recomecar.local')
+DEFAULT_FROM_EMAIL = config(
+    'DEFAULT_FROM_EMAIL',
+    default='Recomeçar <nao-responda@recomecar.app>',
 )
 
 if PRODUCAO:

@@ -75,7 +75,7 @@ class CadastroEgressaView(PublicCadastroMixin, FormView):
             with transaction.atomic():
                 user = self._prepare_user(form)
                 user.save()
-                EmailAddress.objects.create(
+                email_address = EmailAddress.objects.create(
                     user=user,
                     email=user.email,
                     primary=True,
@@ -87,20 +87,20 @@ class CadastroEgressaView(PublicCadastroMixin, FormView):
                 'Não foi possível concluir o cadastro. Revise os dados e tente novamente.',
             )
             return self.form_invalid(form)
-        if enviar_confirmacao(self.request, user):
+        try:
+            email_address.send_confirmation(self.request, signup=True)
+        except Exception:
+            logger.exception('Falha ao enviar confirmação user pk=%s', user.pk)
+            messages.warning(
+                self.request,
+                'Sua conta foi criada, mas não conseguimos enviar o e-mail de '
+                'confirmação. Tente fazer login para reenviar.',
+            )
+        else:
             messages.success(
                 self.request,
                 'Cadastro realizado. Enviamos um e-mail de confirmação; '
                 'clique no link para ativar sua conta.',
-            )
-        else:
-            messages.warning(
-                self.request,
-                format_html(
-                    'Cadastro realizado, mas não foi possível enviar o e-mail. '
-                    '<a href="{}">Solicite um novo envio</a>.',
-                    reverse('accounts:reenviar_confirmacao'),
-                ),
             )
         return redirect('accounts:login')
 
@@ -115,16 +115,16 @@ class CadastroEmpresaView(PublicCadastroMixin, FormView):
             with transaction.atomic():
                 user = self._prepare_user(form)
                 user.save()
-                EmpresaProfile.objects.create(
-                    user=user,
-                    cnpj=form.cleaned_data['cnpj'],
-                    razao_social=form.cleaned_data['razao_social'],
-                )
-                EmailAddress.objects.create(
+                email_address = EmailAddress.objects.create(
                     user=user,
                     email=user.email,
                     primary=True,
                     verified=False,
+                )
+                EmpresaProfile.objects.create(
+                    user=user,
+                    cnpj=form.cleaned_data['cnpj'],
+                    razao_social=form.cleaned_data['razao_social'],
                 )
         except (IntegrityError, ValidationError):
             form.add_error(
@@ -132,20 +132,20 @@ class CadastroEmpresaView(PublicCadastroMixin, FormView):
                 'Não foi possível concluir o cadastro. Revise os dados e tente novamente.',
             )
             return self.form_invalid(form)
-        if enviar_confirmacao(self.request, user):
+        try:
+            email_address.send_confirmation(self.request, signup=True)
+        except Exception:
+            logger.exception('Falha ao enviar confirmação user pk=%s', user.pk)
+            messages.warning(
+                self.request,
+                'Sua conta foi criada, mas não conseguimos enviar o e-mail de '
+                'confirmação. Tente fazer login para reenviar.',
+            )
+        else:
             messages.success(
                 self.request,
                 'Cadastro realizado. Enviamos um e-mail de confirmação; '
                 'clique no link para ativar sua conta.',
-            )
-        else:
-            messages.warning(
-                self.request,
-                format_html(
-                    'Cadastro realizado, mas não foi possível enviar o e-mail. '
-                    '<a href="{}">Solicite um novo envio</a>.',
-                    reverse('accounts:reenviar_confirmacao'),
-                ),
             )
         return redirect('accounts:login')
 
