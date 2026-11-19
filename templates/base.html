@@ -7,8 +7,9 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <link rel="icon" type="image/svg+xml" href="{% static 'img/logo-icon.svg' %}">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#6d28d9">
+    <meta name="theme-color" content="#4A1F3D">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -42,14 +43,14 @@
         input:focus-visible,
         select:focus-visible,
         textarea:focus-visible {
-            outline: 3px solid rgba(124, 58, 237, 0.35);
+            outline: 3px solid rgba(74, 31, 61, 0.35);
             outline-offset: 3px;
         }
 
         input[type="checkbox"],
         input[type="radio"],
         progress {
-            accent-color: #9333ea;
+            accent-color: #8A4D6B;
         }
 
         .pwa-fade-in {
@@ -100,25 +101,9 @@
             <a href="{% url 'vagas:lista' %}"
                class="group flex shrink-0 items-center gap-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
 
-                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 transition group-hover:bg-violet-200">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         class="h-7 w-7"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="1.7"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         aria-hidden="true">
-
-                        <path d="M12 21c0-6 0-10 5-14"/>
-                        <path d="M12 17c-5 0-8-3-8-8 5 0 8 3 8 8Z"/>
-                        <path d="M12 12c0-5 3-8 8-8 0 5-3 8-8 8Z"/>
-
-                    </svg>
-
-                </div>
+                <img src="{% static 'img/logo-icon.svg' %}"
+                     alt="Recomeçar"
+                     class="h-12 w-12 shrink-0">
 
                 <div>
                     <span class="block text-2xl font-bold tracking-tight text-violet-950">
@@ -161,6 +146,16 @@
                 <a href="{% url 'vitrine:lista' %}"
                    class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
                     Vitrine
+                </a>
+
+                <a href="{% url 'sobre' %}"
+                   class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
+                    Sobre
+                </a>
+
+                <a href="{% url 'faq' %}"
+                   class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
+                    FAQ
                 </a>
 
                 {% if request.user.is_authenticated %}
@@ -572,25 +567,9 @@
             <!-- Marca -->
             <div class="flex items-center gap-3">
 
-                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-violet-700">
-
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         class="h-6 w-6"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="1.7"
-                         stroke-linecap="round"
-                         stroke-linejoin="round"
-                         aria-hidden="true">
-
-                        <path d="M12 21c0-6 0-10 5-14"/>
-                        <path d="M12 17c-5 0-8-3-8-8 5 0 8 3 8 8Z"/>
-                        <path d="M12 12c0-5 3-8 8-8 0 5-3 8-8 8Z"/>
-
-                    </svg>
-
-                </div>
+                <img src="{% static 'img/logo-icon.svg' %}"
+                     alt="Recomeçar"
+                     class="h-10 w-10 shrink-0">
 
                 <div>
                     <p class="font-bold text-violet-950">

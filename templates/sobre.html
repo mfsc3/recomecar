@@ -1,7 +1,12 @@
+{% load static %}
 {% extends "base.html" %}
 {% block title %}Sobre nós | Recomeçar{% endblock %}
 {% block content %}
 <main class="mx-auto max-w-4xl px-4 py-10">
+  <div class="mb-10 flex justify-center">
+    <img src="{% static 'img/logo-full.svg' %}" alt="Recomeçar — Talento que transforma" class="max-w-md w-full">
+  </div>
+
   <h1 class="mb-8 text-4xl font-bold text-slate-900">Sobre nós</h1>
 
   <section class="mb-10">
