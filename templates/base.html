@@ -187,51 +187,9 @@
 
                         </a>
 
-                        <a href="{% url 'vitrine:minha' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 select-none transition-all duration-200 ease-in-out active:scale-95">
-                            Minha vitrine
-                        </a>
-                        <a href="{% url 'accounts:curriculo' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800">
-                            Meu currículo
-                        </a>
-                        <a href="{% url 'vagas:minhas_candidaturas' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-violet-50 hover:text-violet-800">
-                            Minhas candidaturas
-                        </a>
-
                     <!-- NAVEGAÇÃO DA EMPRESA -->
                     {% elif request.user.role == 'EMPRESA' %}
 
-                        <a href="{% url 'vagas:minhas' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100 select-none transition-all duration-200 ease-in-out active:scale-95">
-
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="h-5 w-5 text-blue-800"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="1.8"
-                                 stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
-
-                                <path d="M8 6h13"/>
-                                <path d="M8 12h13"/>
-                                <path d="M8 18h13"/>
-                                <path d="M3 6h.01"/>
-                                <path d="M3 12h.01"/>
-                                <path d="M3 18h.01"/>
-
-                            </svg>
-
-                            Minhas vagas
-
-                        </a>
-                        <a href="{% url 'vagas:empresa_editar' %}"
-                           class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900">
-                            Editar perfil da empresa
-                        </a>
 
                         <a href="{% url 'accounts:painel' %}"
                            class="inline-flex min-h-11 items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-blue-50 hover:text-blue-900 focus:outline-none focus:ring-4 focus:ring-blue-100 select-none transition-all duration-200 ease-in-out active:scale-95">
