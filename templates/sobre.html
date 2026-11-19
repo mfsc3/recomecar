@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Sobre nós | Recomeçar{% endblock %}
+{% block content %}
+<main class="mx-auto max-w-4xl px-4 py-10">
+  <h1 class="mb-8 text-4xl font-bold text-slate-900">Sobre nós</h1>
+
+  <section class="mb-10">
+    <h2 class="mb-4 text-2xl font-bold text-slate-800">Quem somos?</h2>
+    <p class="mb-4 text-slate-700 leading-relaxed">
+      O Recomeçar é uma iniciativa voltada à reinserção social e profissional de mulheres egressas do sistema prisional. Buscamos enfrentar as dificuldades que essas mulheres encontram ao retornar à sociedade, especialmente o preconceito e as barreiras de acesso ao mercado de trabalho.
+    </p>
+    <p class="mb-4 text-slate-700 leading-relaxed">
+      Por meio de uma plataforma digital, conectamos mulheres a oportunidades, valorizamos suas habilidades e incentivamos a construção de novas trajetórias.
+    </p>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-4 text-2xl font-bold text-slate-800">Como atuamos?</h2>
+    <p class="mb-4 text-slate-700 leading-relaxed">
+      Nossa iniciativa se desenvolve em três pilares:
+    </p>
+    <ul class="space-y-4">
+      <li class="rounded-xl border border-slate-200 bg-white p-5">
+        <h3 class="mb-2 font-bold text-slate-900">Empreendedorismo</h3>
+        <p class="text-slate-700">Oferecemos uma vitrine virtual para a divulgação e comercialização de produtos confeccionados pelas próprias mulheres.</p>
+      </li>
+      <li class="rounded-xl border border-slate-200 bg-white p-5">
+        <h3 class="mb-2 font-bold text-slate-900">Empregabilidade</h3>
+        <p class="text-slate-700">Conectamos mulheres a empresas parceiras, divulgamos vagas de emprego e oferecemos ferramentas de auxílio à elaboração de currículos.</p>
+      </li>
+      <li class="rounded-xl border border-slate-200 bg-white p-5">
+        <h3 class="mb-2 font-bold text-slate-900">Educação e capacitação</h3>
+        <p class="text-slate-700">Buscamos parcerias com instituições de ensino e empresas para disponibilizar cursos, conteúdos educativos e formações profissionais.</p>
+      </li>
+    </ul>
+  </section>
+
+  <section class="mb-10">
+    <h2 class="mb-4 text-2xl font-bold text-slate-800">Nosso propósito</h2>
+    <p class="mb-4 text-slate-700 leading-relaxed">
+      Acreditamos que toda mulher merece a oportunidade de construir uma nova história. Nosso propósito é promover autonomia, dignidade e inclusão por meio do empreendedorismo, da educação e do trabalho.
+    </p>
+  </section>
+
+  <section class="rounded-2xl border border-purple-200 bg-purple-50 p-6">
+    <h2 class="mb-2 text-xl font-bold text-purple-900">Faça parte</h2>
+    <p class="mb-4 text-purple-900">
+      Se você é uma mulher egressa em busca de oportunidades, ou uma empresa que quer contratar com propósito, comece agora.
+    </p>
+    <div class="flex flex-wrap gap-3">
+      <a href="{% url 'accounts:cadastro_egressa' %}" class="rounded-xl bg-purple-600 px-5 py-3 font-bold text-white hover:bg-purple-700">Sou egressa</a>
+      <a href="{% url 'accounts:cadastro_empresa' %}" class="rounded-xl border border-purple-300 bg-white px-5 py-3 font-bold text-purple-700 hover:bg-purple-100">Sou empresa</a>
+    </div>
+  </section>
+</main>
+{% endblock %}
