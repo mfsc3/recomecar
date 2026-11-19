@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 
 from .health import saude
 
@@ -47,6 +47,8 @@ urlpatterns = [
     path('accounts/3rdparty/', RedirectView.as_view(
         pattern_name='accounts:painel', permanent=False,
     )),
+    path('sobre/', TemplateView.as_view(template_name='sobre.html'), name='sobre'),
+    path('faq/', TemplateView.as_view(template_name='faq.html'), name='faq'),
     path('', include('accounts.urls')),
     path('accounts/', include('allauth.urls')),
     path('vagas/', include('vagas.urls')),

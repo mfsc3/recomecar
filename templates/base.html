@@ -628,6 +628,8 @@
             </div>
 
             <nav aria-label="Documentos" class="select-none flex gap-4 text-sm text-violet-700">
+                <a href="{% url 'sobre' %}" class="hover:underline select-none transition-all duration-200 ease-in-out active:scale-95">Sobre</a>
+                <a href="{% url 'faq' %}" class="hover:underline select-none transition-all duration-200 ease-in-out active:scale-95">FAQ</a>
                 <a href="{% url 'accounts:termos' %}" class="hover:underline select-none transition-all duration-200 ease-in-out active:scale-95">Termos de Uso</a>
                 <a href="{% url 'accounts:privacidade' %}" class="hover:underline select-none transition-all duration-200 ease-in-out active:scale-95">Privacidade</a>
             </nav>
