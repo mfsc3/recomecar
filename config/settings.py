@@ -222,17 +222,18 @@ def _validate_storage_backend(*, debug, storage_backend, is_test):
         )
 
 
+# ──────────────────────────────────────────────────────────────
+# Storage — Cloudflare R2 (produção) / FileSystemStorage (dev)
+# ──────────────────────────────────────────────────────────────
 STORAGES = {
-    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage',},
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
 
-R2_BUCKET_NAME = exigir('R2_BUCKET_NAME')
-R2_ENDPOINT_URL = exigir('R2_ENDPOINT_URL')
-R2_ACCESS_KEY_ID = exigir('R2_ACCESS_KEY_ID')
-R2_SECRET_ACCESS_KEY = exigir('R2_SECRET_ACCESS_KEY')
 if R2_BUCKET_NAME.strip():
     STORAGES['default'] = {
         'BACKEND': 'storages.backends.s3.S3Storage',
@@ -243,11 +244,10 @@ if R2_BUCKET_NAME.strip():
             'secret_key': R2_SECRET_ACCESS_KEY,
             'region_name': 'auto',
             'signature_version': 's3v4',
-            'querystring_auth': True,
-            'querystring_expire': 3600,
+            'querystring_auth': False,                                          # ← ESSENCIAL
+            'custom_domain': 'pub-72c38b548d3b4d55aba5e243d030d333.r2.dev',     # ← SEM https://
+            'default_acl': 'public-read',
             'file_overwrite': False,
-            'default_acl': None,
-            'custom_domain': 'https://pub-72c38b548d3b4d55aba5e243d030d333.r2.dev',
         },
     }
 
