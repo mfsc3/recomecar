@@ -223,7 +223,7 @@ def _validate_storage_backend(*, debug, storage_backend, is_test):
 
 
 STORAGES = {
-    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage', 'custom_domain': 'https://pub-72c38b548d3b4d55aba5e243d030d333.r2.dev',},
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
@@ -347,7 +347,7 @@ CONTENT_SECURITY_POLICY = {
         "default-src": [SELF],
         "script-src": [SELF],
         "style-src": [SELF],
-        "img-src": [SELF, "data:"],
+        "img-src": [SELF, "data:", "https://pub-72c38b548d3b4d55aba5e243d030d333.r2.dev"],
         "font-src": [SELF],
         "connect-src": [SELF],
         "form-action": [SELF],
