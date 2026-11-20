@@ -121,33 +121,35 @@ Alguns dos problemas que exigiram decisões arquiteturais específicas:
 python manage.py test
 # Ran 274 tests in ~10s
 # OK (2 skipped: SMTP em produção, esperado com DEBUG=True)
+
 ```
 
 Cobertura dos caminhos críticos:
 
-- **Anti-IDOR:** egressa acessando currículo de outra, empresa acessando candidatura de outra (404 nas duas direções)
-- **Cascade + LGPD:** exclusão de conta sem órfãos, com não contaminação cruzada entre empresas/egressas
-- **Snapshot imutável:** edição do currículo após candidatura não altera o snapshot
-- **CSP:** header presente em rotas públicas, ausente em `/admin/`, sem `unsafe-*`
-- **Guard de storage:** dispara com `DEBUG=False+FS`, não dispara com `DEBUG=True`/R2/modo teste
-- **Rate limit:** bloqueio por IP e por e-mail, resposta anti-enumeração
-- **Atomicidade:** falha no envio de e-mail não quebra o cadastro (rollback garantido)
-- **Fluxo ponta a ponta:** cadastro → verificação → aprovação → vaga → candidatura → snapshot
+* **Anti-IDOR:** egressa acessando currículo de outra, empresa acessando candidatura de outra (404 nas duas direções)
+* **Cascade + LGPD:** exclusão de conta sem órfãos, com não contaminação cruzada entre empresas/egressas
+* **Snapshot imutável:** edição do currículo após candidatura não altera o snapshot
+* **CSP:** header presente em rotas públicas, ausente em `/admin/`, sem `unsafe-*`
+* **Guard de storage:** dispara com `DEBUG=False+FS`, não dispara com `DEBUG=True`/R2/modo teste
+* **Rate limit:** bloqueio por IP e por e-mail, resposta anti-enumeração
+* **Atomicidade:** falha no envio de e-mail não quebra o cadastro (rollback garantido)
+* **Fluxo ponta a ponta:** cadastro → verificação → aprovação → vaga → candidatura → snapshot
 
 ---
 
 ## 🚀 Como rodar localmente
 
 ### Pré-requisitos
-- Python 3.12+ (recomendado 3.14)
-- PostgreSQL 16 **ou** SQLite (dev rápido)
-- `git`
+
+* Python 3.12+ (recomendado 3.14)
+* PostgreSQL 16 **ou** SQLite (dev rápido)
+* `git`
 
 ### Setup
 
 ```bash
 # 1. Clone
-git clone https://github.com/mfsc3/recomecar.git
+git clone [https://github.com/mfsc3/recomecar.git](https://github.com/mfsc3/recomecar.git)
 cd recomecar
 
 # 2. Ambiente virtual
@@ -172,6 +174,7 @@ python manage.py createsuperuser
 
 # 7. Rodar
 python manage.py runserver
+
 ```
 
 Acesse `http://127.0.0.1:8000/`.
@@ -180,6 +183,7 @@ Acesse `http://127.0.0.1:8000/`.
 
 ```bash
 python manage.py test
+
 ```
 
 > Os testes usam SQLite em memória — não tocam no PostgreSQL nem no R2 real.
@@ -201,66 +205,76 @@ recomecar/
 ├── tailwind.config.js
 ├── requirements.txt
 └── manage.py
+
 ```
 
 ---
 
 ## 🔒 Segurança — checklist aplicado
 
-- [x] Sem `unsafe-inline` ou `unsafe-eval` na CSP
-- [x] `SECRET_KEY` e credenciais via `.env` (nunca commitados)
-- [x] `.env.example` com valores fictícios apenas
-- [x] Anti-IDOR com filtro no banco (não em `if` após `get()`)
-- [x] `transaction.atomic()` com `try/except` fora do bloco (rollback garantido)
-- [x] `full_clean()` em models com validação cruzada
-- [x] `axes` configurado com lockout por IP+usuário (sem enumeração)
-- [x] Logs nunca contêm e-mail, senha ou `request.POST`
-- [x] `DEFAULT_AUTO_FIELD` explícito, sem `id` previsível em rotas públicas
-- [x] Sem `|safe` ou `autoescape off` em templates
-- [x] Hard delete com cascade testado (zero órfãos)
+* [x] Sem `unsafe-inline` ou `unsafe-eval` na CSP
+* [x] `SECRET_KEY` e credenciais via `.env` (nunca commitados)
+* [x] `.env.example` com valores fictícios apenas
+* [x] Anti-IDOR com filtro no banco (não em `if` após `get()`)
+* [x] `transaction.atomic()` com `try/except` fora do bloco (rollback garantido)
+* [x] `full_clean()` em models com validação cruzada
+* [x] `axes` configurado com lockout por IP+usuário (sem enumeração)
+* [x] Logs nunca contêm e-mail, senha ou `request.POST`
+* [x] `DEFAULT_AUTO_FIELD` explícito, sem `id` previsível em rotas públicas
+* [x] Sem `|safe` ou `autoescape off` em templates
+* [x] Hard delete com cascade testado (zero órfãos)
 
 ---
 
-## 📝 Processo de desenvolvimento
+## 📝 Processo de desenvolvimento e IA
 
-Este projeto foi construído com uma metodologia de **Blueprints técnicos + dupla-checagem**:
+Este projeto foi construído utilizando um modelo avançado de **Desenvolvimento Orientado por IA (AI-Driven Development)**, onde a engenharia de software foi orquestrada por uma triagem de responsabilidades entre humano e inteligências artificiais:
 
-1. **Blueprints detalhados** antes de cada sprint — modelagem, segurança, URLs, testes e prompt para execução
-2. **Auditoria read-only** após cada execução — review manual do código antes do merge
-3. **Grep de compliance** (`antecedentes`, `pena`, `artigo`, `regime`, etc.) em todo PR
-4. **Zero merges sem testes verdes**
+1. **Orquestração Humana (Tech Lead/Product):** Responsável por definir a visão do produto, requisitos de negócio, gerenciar as sprints, aprovar a lógica de domínio e garantir que o propósito social (e as sensibilidades da LGPD) fossem o pilar central.
+2. **IA Cérebro / Arquiteta (LLM Consultivo):** Responsável por idealizar a arquitetura Django, desenhar os *Blueprints técnicos* de cada sprint antes da escrita de código, modelar o banco de dados seguro, estabelecer os fluxos anti-IDOR e realizar auditorias (code reviews) detalhadas após cada implementação.
+3. **IA Engenheira / Executora (LLM de Código):** Responsável por escrever o código-fonte, implementar as lógicas de backend, estilizar o frontend com Tailwind e gerar a densa suíte de testes automatizados, seguindo estritamente os blueprints fornecidos pela IA Cérebro.
 
-O processo capturou **5 bugs no próprio blueprint** ao longo de 5 sprints consecutivas — cada um corrigido antes de chegar em produção. Nenhum bug de segurança chegou em `main`.
+### O Fluxo de Trabalho (Blueprints + Dupla-checagem)
 
-O histórico de commits reflete essa cadência: cada sprint como PR isolado, com review read-only antes do merge.
+Em vez de gerar código diretamente, o processo seguiu um rigoroso padrão:
+
+* **Blueprints detalhados** gerados pela IA Cérebro antes de cada sprint (modelagem, segurança, URLs, testes e prompts para execução).
+* **Execução guiada** pela IA Engenheira.
+* **Auditoria read-only** após cada execução (review de código cruzado entre IAs e humano antes do merge).
+* **Grep de compliance** (`antecedentes`, `pena`, `artigo`, `regime`, etc.) em todo PR.
+* **Zero merges sem testes verdes.**
+
+Essa separação de papéis garantiu que a velocidade da IA não comprometesse a segurança e a arquitetura do projeto. O processo capturou **5 bugs no próprio blueprint** ao longo das sprints, todos corrigidos antes de chegar à produção. Nenhum bug de segurança chegou à branch `main`.
 
 ---
 
 ## 🗺️ Roadmap
 
 Já entregue (Sprints 1–10 + mini-sprints 4.1, 8.1, 6.1):
-- ✅ Autenticação + RBAC + verificação de e-mail + Google OAuth
-- ✅ Perfis de egressa e empresa
-- ✅ Vagas, candidaturas e snapshots
-- ✅ Currículo modular
-- ✅ LGPD (direito ao esquecimento, consentimento versionado)
-- ✅ CSP, Tailwind local, guard de R2, brute force
+
+* ✅ Autenticação + RBAC + verificação de e-mail + Google OAuth
+* ✅ Perfis de egressa e empresa
+* ✅ Vagas, candidaturas e snapshots
+* ✅ Currículo modular
+* ✅ LGPD (direito ao esquecimento, consentimento versionado)
+* ✅ CSP, Tailwind local, guard de R2, brute force
 
 Backlog pós-lançamento:
-- [ ] CI com PostgreSQL (hoje SQLite em memória)
-- [ ] Auditoria de exclusão de conta (prova de LGPD)
-- [ ] Pre-commit hook para rebuild automático do CSS
-- [ ] Moderação de conteúdo em descrições de vagas
-- [ ] Soft-delete com janela de 30 dias (recuperação de conta)
-- [ ] CSP com nonce para `/admin/`
-- [ ] Foto/avatar da egressa (com consentimento explícito)
-- [ ] Recuperação de senha para contas sociais (sem senha utilizável)
+
+* [ ] CI com PostgreSQL (hoje SQLite em memória)
+* [ ] Auditoria de exclusão de conta (prova de LGPD)
+* [ ] Pre-commit hook para rebuild automático do CSS
+* [ ] Moderação de conteúdo em descrições de vagas
+* [ ] Soft-delete com janela de 30 dias (recuperação de conta)
+* [ ] CSP com nonce para `/admin/`
+* [ ] Foto/avatar da egressa (com consentimento explícito)
+* [ ] Recuperação de senha para contas sociais (sem senha utilizável)
 
 ---
 
 ## 📄 Licença
 
-Distribuído sob licença **MIT**. Veja [`LICENSE`](LICENSE) para detalhes.
+Distribuído sob licença **MIT**. Veja [`LICENSE`](https://www.google.com/search?q=LICENSE) para detalhes.
 
 O código é público para portfólio e aprendizado. Uso comercial em produção requer conversa com o autor.
 
@@ -270,30 +284,25 @@ O código é público para portfólio e aprendizado. Uso comercial em produção
 
 **Marcos Fábio de Souza Carvalho** ([@mfsc3](https://github.com/mfsc3))
 
-Projeto desenvolvido como parte de portfólio técnico, com foco em **Django, segurança de aplicação, LGPD e impacto social**.
+Projeto desenvolvido como parte de portfólio técnico, com foco em **Django, segurança de aplicação, LGPD, impacto social e colaboração humano-IA**.
 
 ---
 
 ## 🙏 Agradecimentos
 
 Às mulheres que inspiraram este projeto. Que toda mulher tenha a oportunidade de construir uma nova história.
+
 ```
 
 ---
 
-## Como usar
+### Como aplicar:
+Abra o seu arquivo `README.md`, selecione tudo (`Ctrl+A`), apague e cole esse novo conteúdo. 
 
-1. Abra `README.md` na raiz do projeto
-2. **Ctrl+A** para selecionar tudo, cole o conteúdo acima
-3. **Ctrl+S** para salvar
-4. Commit e push:
-
-```powershell
+Depois, é só subir para o GitHub:
+```bash
 git add README.md
-git commit -m "docs: adiciona README completo do projeto"
+git commit -m "docs: adiciona fluxo de AI-driven development no README"
 git push origin main
+
 ```
-
-**Atenção:** o link do badge de testes aponta para `https://github.com/mfsc3/recomecar` — ajuste se o repo tiver outro nome/usuário. O mesmo para o `[@mfsc3]` no rodapé.
-
-Quando publicar o repositório, o GitHub vai renderizar esse README automaticamente na página principal.
