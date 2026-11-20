@@ -293,16 +293,3 @@ Projeto desenvolvido como parte de portfólio técnico, com foco em **Django, se
 Às mulheres que inspiraram este projeto. Que toda mulher tenha a oportunidade de construir uma nova história.
 
 ```
-
----
-
-### Como aplicar:
-Abra o seu arquivo `README.md`, selecione tudo (`Ctrl+A`), apague e cole esse novo conteúdo. 
-
-Depois, é só subir para o GitHub:
-```bash
-git add README.md
-git commit -m "docs: adiciona fluxo de AI-driven development no README"
-git push origin main
-
-```
