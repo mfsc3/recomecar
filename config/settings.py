@@ -225,6 +225,13 @@ def _validate_storage_backend(*, debug, storage_backend, is_test):
 # ──────────────────────────────────────────────────────────────
 # Storage — Cloudflare R2 (produção) / FileSystemStorage (dev)
 # ──────────────────────────────────────────────────────────────
+
+# Variáveis do R2 (lidas do .env). Em dev, ficam vazias.
+R2_BUCKET_NAME = config('R2_BUCKET_NAME', default='')
+R2_ENDPOINT_URL = config('R2_ENDPOINT_URL', default='')
+R2_ACCESS_KEY_ID = config('R2_ACCESS_KEY_ID', default='')
+R2_SECRET_ACCESS_KEY = config('R2_SECRET_ACCESS_KEY', default='')
+
 STORAGES = {
     'default': {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
@@ -244,8 +251,8 @@ if R2_BUCKET_NAME.strip():
             'secret_key': R2_SECRET_ACCESS_KEY,
             'region_name': 'auto',
             'signature_version': 's3v4',
-            'querystring_auth': False,                                          # ← ESSENCIAL
-            'custom_domain': 'pub-72c38b548d3b4d55aba5e243d030d333.r2.dev',     # ← SEM https://
+            'querystring_auth': False,
+            'custom_domain': 'pub-72c38b548d3b4d55aba5e243d030d333.r2.dev',
             'default_acl': 'public-read',
             'file_overwrite': False,
         },
