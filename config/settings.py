@@ -223,7 +223,7 @@ def _validate_storage_backend(*, debug, storage_backend, is_test):
 
 
 STORAGES = {
-    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage', 'custom_domain': 'https://pub-72c38b548d3b4d55aba5e243d030d333.r2.dev',},
+    'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage',},
     'staticfiles': {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
@@ -247,6 +247,7 @@ if R2_BUCKET_NAME.strip():
             'querystring_expire': 3600,
             'file_overwrite': False,
             'default_acl': None,
+            'custom_domain': 'https://pub-72c38b548d3b4d55aba5e243d030d333.r2.dev',
         },
     }
 
